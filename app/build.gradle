@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "hcmute.vtv_18110069_18110051_18110070.game_sudoku"
+        minSdkVersion 19
+        targetSdkVersion 30
+        versionCode 20210622
+        versionName "3.8.0"
+
+        vectorDrawables.useSupportLibrary true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            zipAlignEnabled true
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
+    compileOptions {
+        encoding "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'META-INF/*'
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.preference:preference:1.1.1'
+
+    implementation 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'
+    // TODO: Migrate entirely to AndroidX Preference, using this version with it
+    //implementation 'com.github.attenzione:android-ColorPickerPreference:v1.2'
+}

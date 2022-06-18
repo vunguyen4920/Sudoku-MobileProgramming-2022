@@ -322,9 +322,9 @@ public class ThemeUtils {
                 return R.style.Theme_AppCompat;
             case "custom_light":
                 return R.style.Theme_AppCompat_Light;
-            case "opensudoku":
+            case "vtvsudoku":
             default:
-                return R.style.Theme_OpenSudoku;
+                return R.style.Theme_VtvSudoku;
         }
     }
 
@@ -342,7 +342,7 @@ public class ThemeUtils {
             case "highcontrast":
             case "custom":
                 return false;
-            case "opensudoku":
+            case "vtvsudoku":
             case "latte":
             case "sunrise":
             case "crystal":
@@ -360,7 +360,7 @@ public class ThemeUtils {
 
     public static String getCurrentThemeFromPreferences(Context context) {
         SharedPreferences gameSettings = PreferenceManager.getDefaultSharedPreferences(context);
-        return gameSettings.getString("theme", "opensudoku");
+        return gameSettings.getString("theme", "vtvsudoku");
     }
 
     public static int getThemeResourceIdFromPreferences(Context context) {

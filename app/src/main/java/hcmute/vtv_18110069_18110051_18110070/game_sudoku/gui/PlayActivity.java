@@ -210,7 +210,7 @@ public class PlayActivity extends ThemedActivity {
 
         mFillInNotesEnabled = gameSettings.getBoolean("fill_in_notes_enabled", false);
 
-        String theme = gameSettings.getString("theme", "opensudoku");
+        String theme = gameSettings.getString("theme", "vtvsudoku");
         if (theme.equals("custom") || theme.equals("custom_light")) {
             ThemeUtils.applyCustomThemeToSudokuBoardViewFromContext(mSudokuBoard, getApplicationContext());
         }

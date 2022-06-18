@@ -8,9 +8,6 @@ import android.util.Log;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.R;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.SudokuGame;
 
-/**
- * This class helps open, create, and upgrade the database file.
- */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Khai báo DB_VERSION

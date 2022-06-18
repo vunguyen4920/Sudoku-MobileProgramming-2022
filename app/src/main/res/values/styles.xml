@@ -20,7 +20,7 @@
         <item name="backgroundColorHighlighted">@color/default_backgroundColorHighlighted</item>
     </style>
 
-    <style name="Theme.OpenSudoku" parent="Theme.AppCompat.Light">
+    <style name="Theme.VtvSudoku" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/sudoku_colorPrimary</item>
         <item name="colorPrimaryDark">@color/sudoku_colorPrimaryDark</item>
         <item name="colorAccent">@color/sudoku_colorAccent</item>

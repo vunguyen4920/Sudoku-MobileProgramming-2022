@@ -4,47 +4,27 @@ import android.content.Context;
 
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.R;
 
-/**
- * Some information about folder, used in FolderListActivity.
- *
- * @author romario
- */
+//Là class dùng như thư mục, để chứa các màn chơi tùy theo độ khó
 public class FolderInfo {
 
-    /**
-     * Primary key of folder.
-     */
-    public long id;
 
-    /**
-     * Name of the folder.
-     */
+    public long id;
     public String name;
 
-    /**
-     * Total count of puzzles in the folder.
-     */
+    //Thông tin về số màn chơi, số giải nhanh mà độ khó đó có và có bao nhiêu màn đang dừng chơi
     public int puzzleCount;
-
-    /**
-     * Count of solved puzzles in the folder.
-     */
     public int solvedCount;
-
-    /**
-     * Count of puzzles in "playing" state in the folder.
-     */
     public int playingCount;
 
     public FolderInfo() {
 
     }
-
+    //lấy thông tin về độ khó
     public FolderInfo(long id, String name) {
         this.id = id;
         this.name = name;
     }
-
+    //Lấy các thông tin chi tiết của độ khó và cũng check xem tất cả các màn đã được giải hay chưa
     public String getDetail(Context c) {
         StringBuilder sb = new StringBuilder();
 
@@ -57,7 +37,6 @@ public class FolderInfo {
 
             int unsolvedCount = puzzleCount - solvedCount;
 
-            // if there are any playing or unsolved puzzles, add info about them
             if (playingCount != 0 || unsolvedCount != 0) {
                 sb.append(" (");
 
@@ -75,7 +54,6 @@ public class FolderInfo {
                 sb.append(")");
             }
 
-            // maybe all puzzles are solved?
             if (unsolvedCount == 0 && puzzleCount != 0) {
                 sb.append(" (").append(c.getString(R.string.all_solved)).append(")");
             }

@@ -2,11 +2,7 @@ package hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.command;
 
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.CellCollection;
 
-/**
- * Generic command acting on one or more cells.
- *
- * @author romario
- */
+//Lệnh để dùng các hàm cho collection, tiện cho việc undo trong màn chơi
 public abstract class AbstractCellCommand extends AbstractCommand {
 
     private CellCollection mCells;

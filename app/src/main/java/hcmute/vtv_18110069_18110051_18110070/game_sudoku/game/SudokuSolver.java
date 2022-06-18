@@ -4,6 +4,7 @@ package hcmute.vtv_18110069_18110051_18110070.game_sudoku.game;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+//Dùng để chứa các thông tin về lời giải cho 
 public class SudokuSolver {
 
     private int NUM_ROWS = 9;
@@ -22,11 +23,7 @@ public class SudokuSolver {
         initializeLinkedList();
     }
 
-    /* ---------------PUBLIC FUNCTIONS--------------- */
-
-    /**
-     * Modifies linked list based on the original state of the board
-     */
+    //Xét chuỗi linklist để đặt giá trị
     public void setPuzzle(CellCollection mCells) {
         Cell[][] board = mCells.getCells();
 
@@ -36,7 +33,7 @@ public class SudokuSolver {
                 int val = cell.getValue();
                 if (!cell.isEditable()) {
                     int matrixRow = cellToRow(row, col, val - 1, true);
-                    int matrixCol = 9 * row + col; // calculates column of node based on cell constraint
+                    int matrixCol = 9 * row + col;
 
                     Node rowNode = mLinkedList[matrixRow][matrixCol];
                     Node rightNode = rowNode;
@@ -49,6 +46,7 @@ public class SudokuSolver {
         }
     }
 
+    //Tạo mảng và đưa giá trị giải vào
     public ArrayList<int[]> solve() {
         mSolution = new ArrayList<>();
         mSolution = DLX();
@@ -63,13 +61,13 @@ public class SudokuSolver {
         return finalValues;
     }
 
-    /* ---------------FUNCTIONS TO IMPLEMENT SOLVER--------------- */
+    //Hàm để gắn ràng buộc
     private void initializeConstraintMatrix() {
-        // add row of 1's for column headers
+        //Thêm dòng vào ràng buộc
         mConstraintMatrix = new int[NUM_ROWS * NUM_COLS * NUM_VALS + 1][NUM_CELLS * NUM_CONSTRAINTS];
         Arrays.fill(mConstraintMatrix[0], 1);
 
-        // calculate column where constraint will go
+        //Xác định xem dòng ràng buộc 
         int rowShift = NUM_CELLS;
         int colShift = NUM_CELLS * 2;
         int blockShift = NUM_CELLS * 3;
@@ -112,13 +110,14 @@ public class SudokuSolver {
         }
     }
 
+    //Khởi tạo linklist
     private void initializeLinkedList() {
         mLinkedList = new Node[NUM_ROWS * NUM_COLS * NUM_VALS + 1][NUM_CELLS * NUM_CONSTRAINTS];
         mHead = new Node();
         int rows = mLinkedList.length;
         int cols = mLinkedList[0].length;
 
-        // create node for each 1 in constraint matrix
+        // Tạo node cho mỗi ràng buộc
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (mConstraintMatrix[i][j] == 1) {
@@ -127,7 +126,7 @@ public class SudokuSolver {
             }
         }
 
-        // link nodes in mLinkedList
+        //liên kết node với linklist
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (mConstraintMatrix[i][j] == 1) {
@@ -165,7 +164,7 @@ public class SudokuSolver {
                     } while (mConstraintMatrix[a][b] != 1);
                     mLinkedList[i][j].down = mLinkedList[a][b];
 
-                    // initialize remaining node info
+                    // đi qua thông tin các node còn lại
                     mLinkedList[i][j].columnHeader = mLinkedList[0][j];
                     mLinkedList[i][j].rowID = i;
                     mLinkedList[i][j].colID = j;
@@ -173,18 +172,14 @@ public class SudokuSolver {
             }
         }
 
-        // link head node
+        // liên kết node head
         mHead.right = mLinkedList[0][0];
         mHead.left = mLinkedList[0][cols - 1];
         mLinkedList[0][0].left = mHead;
         mLinkedList[0][cols - 1].right = mHead;
     }
 
-    /**
-     * Dancing links algorithm
-     *
-     * @return array of solution nodes or empty array if no solution exists
-     */
+    //Dancing links algorithm - thuật toán dùng để giải sudoku
     public ArrayList<Node> DLX() {
         if (mHead.right == mHead) {
             return mSolution;
@@ -206,7 +201,7 @@ public class SudokuSolver {
                     return tempSolution;
                 }
 
-                // undo operations and try the next row
+                // undo lại và thử hướng khác
                 mSolution.remove(mSolution.size() - 1);
                 colNode = rowNode.columnHeader;
                 Node leftNode;
@@ -220,17 +215,7 @@ public class SudokuSolver {
     }
 
 
-    /* ---------------UTILITY FUNCTIONS--------------- */
-
-    /**
-     * Converts from puzzle cell to constraint matrix
-     *
-     * @param row             0-8 index
-     * @param col             0-8 index
-     * @param val             0-8 index (representing values 1-9)
-     * @param headersInMatrix true when headers are in mConstraintMatrix, false if in separate vector
-     * @return row in mConstraintMatrix corresponding to cell indices and value
-     */
+    //Đưa thông tin từ cell qua 1 dòng ma trận
     private int cellToRow(int row, int col, int val, boolean headersInMatrix) {
         int matrixRow = 81 * row + 9 * col + val;
         if (headersInMatrix) {
@@ -238,7 +223,7 @@ public class SudokuSolver {
         }
         return matrixRow;
     }
-
+    //Trả về dòng ma trận có thông tin và giá trị của cell
     private int[] rowToCell(int matrixRow, boolean headersInMatrix) {
         int[] rowColVal = new int[3];
         if (headersInMatrix) {
@@ -251,9 +236,7 @@ public class SudokuSolver {
         return rowColVal;
     }
 
-    /**
-     * Functions to move cyclically through matrix
-     */
+    //Các hàm dùng để đi quanh ma trận
     private int moveLeft(int j, int numCols) {
         return j - 1 < 0 ? numCols - 1 : j - 1;
     }
@@ -270,9 +253,7 @@ public class SudokuSolver {
         return (i + 1) % numRows;
     }
 
-    /**
-     * Unlinks node from linked list
-     */
+    //Xóa liên kết node khỏi linklist
     private void cover(Node node) {
         Node colNode = node.columnHeader;
         colNode.left.right = colNode.right;
@@ -305,9 +286,7 @@ public class SudokuSolver {
         colNode.right.left = colNode;
     }
 
-    /**
-     * Returns column node with lowest # of nodes
-     */
+    //Trả về các node của cột có ít node nhất
     private Node chooseColumn() {
         Node bestNode = null;
         int lowestNum = 100000;

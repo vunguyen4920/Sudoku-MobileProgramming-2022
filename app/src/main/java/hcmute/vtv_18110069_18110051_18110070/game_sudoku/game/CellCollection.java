@@ -7,72 +7,38 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
-/**
- * Collection of sudoku cells. This class in fact represents one sudoku board (9x9).
- *
- * @author romario
- */
+//CellCollection là class dùng để tượng trưng cho bàn sudoku 9x9
 public class CellCollection {
 
     public static final int SUDOKU_SIZE = 9;
-
-    /**
-     * String is expected to be in format "00002343243202...", where each number represents
-     * cell value, no other information can be set using this method.
-     */
     public static int DATA_VERSION_PLAIN = 0;
-
-    /**
-     * See {@link #DATA_PATTERN_VERSION_1} and {@link #serialize()}.
-     * Notes stored as an array of numbers
-     */
     public static int DATA_VERSION_1 = 1;
-
-    /**
-     * Notes stored as a single number.
-     */
     public static int DATA_VERSION_2 = 2;
-
-    /**
-     * There was a bug in the version 2. Notes stored with an additional bar character |.
-     * So, it was impossible to get the import regex matched.
-     * The V2 regex was modified to allow double bar symbols
-     * Bug was fixed, but version has to be changed
-     */
     public static int DATA_VERSION_3 = 3;
-
     public static int DATA_VERSION = DATA_VERSION_3;
     private static Pattern DATA_PATTERN_VERSION_PLAIN = Pattern.compile("^\\d{81}$");
     private static Pattern DATA_PATTERN_VERSION_1 = Pattern.compile("^version: 1\\n((?#value)\\d\\|(?#note)((\\d,)+|-)\\|(?#editable)[01]\\|){0,81}$");
     private static Pattern DATA_PATTERN_VERSION_2 = Pattern.compile("^version: 2\\n((?#value)\\d\\|(?#note)(\\d){1,3}\\|{1,2}(?#editable)[01]\\|){0,81}$");
     private static Pattern DATA_PATTERN_VERSION_3 = Pattern.compile("^version: 3\\n((?#value)\\d\\|(?#note)(\\d){1,3}\\|(?#editable)[01]\\|){0,81}$");
-    private final List<OnChangeListener> mChangeListeners = new ArrayList<>();
-    // TODO: An array of ints is a much better than an array of Integers, but this also generalizes to the fact that two parallel arrays of ints are also a lot more efficient than an array of (int,int) objects
-    // Cell's data.
+    //Biến chứa thông tin về cell
     private Cell[][] mCells;
-    // Helper arrays, contains references to the groups of cells, which should contain unique
-    // numbers.
+
+    //Là mảng chứa thông tin về các vùng trong collection cùng với các hàng và các cột
     private CellGroup[] mSectors;
     private CellGroup[] mRows;
     private CellGroup[] mColumns;
-    private boolean mOnChangeEnabled = true;
 
-    /**
-     * Wraps given array in this object.
-     *
-     * @param cells
-     */
+    //Biến để cho biết onchange có được sử dụng hay bị khóa,
+    //dùng để ngăn chặn thay đổi bất ngờ
+    private boolean mOnChangeEnabled = true;
+    private final List<OnChangeListener> mChangeListeners = new ArrayList<OnChangeListener>();
+
+//Lấy cell để tạm lưu trữ
     private CellCollection(Cell[][] cells) {
 
         mCells = cells;
         initCollection();
-    }
-
-    /**
-     * Creates empty sudoku.
-     *
-     * @return
-     */
+    //Tạo collection mới để chứa các cell
     public static CellCollection createEmpty() {
         Cell[][] cells = new Cell[SUDOKU_SIZE][SUDOKU_SIZE];
 
@@ -86,11 +52,7 @@ public class CellCollection {
         return new CellCollection(cells);
     }
 
-    /**
-     * Generates debug game.
-     *
-     * @return
-     */
+    //Tạo game đơn giản để debug
     public static CellCollection createDebugGame() {
         CellCollection debugGame = new CellCollection(new Cell[][]{
                 {new Cell(), new Cell(), new Cell(), new Cell(4), new Cell(5), new Cell(6), new Cell(7), new Cell(8), new Cell(9),},
@@ -107,12 +69,7 @@ public class CellCollection {
         return debugGame;
     }
 
-    /**
-     * Creates instance from given <code>StringTokenizer</code>.
-     *
-     * @param data
-     * @return
-     */
+ //Hàm dùng để trả về collection đọc nhất, dùng cho bên command
     public static CellCollection deserialize(StringTokenizer data, int version) {
         Cell[][] cells = new Cell[SUDOKU_SIZE][SUDOKU_SIZE];
 
@@ -130,15 +87,7 @@ public class CellCollection {
         return new CellCollection(cells);
     }
 
-    /**
-     * Creates instance from given string (string which has been
-     * created by {@link #serialize(StringBuilder)} or {@link #serialize()} method).
-     * earlier.
-     *
-     * @param note
-     */
     public static CellCollection deserialize(String data) {
-        // TODO: use DATA_PATTERN_VERSION_1 to validate and extract puzzle data
         String[] lines = data.split("\n");
         if (lines.length == 0) {
             throw new IllegalArgumentException("Cannot deserialize Sudoku, data corrupted.");
@@ -155,16 +104,14 @@ public class CellCollection {
         }
     }
 
-    /**
-     * Creates collection instance from given string. String is expected
-     * to be in format "00002343243202...", where each number represents
-     * cell value, no other information can be set using this method.
-     *
-     * @param data
-     * @return
-     */
+    }
+
+    
+    }
+
+    
+     //Tạo instance cho collection với thông tin đưa vào, chỉ thêm được giá trị cho cell
     public static CellCollection fromString(String data) {
-        // TODO: validate
 
         Cell[][] cells = new Cell[SUDOKU_SIZE][SUDOKU_SIZE];
 
@@ -176,7 +123,6 @@ public class CellCollection {
                     pos++;
                     if (data.charAt(pos - 1) >= '0'
                             && data.charAt(pos - 1) <= '9') {
-                        // value=Integer.parseInt(data.substring(pos-1, pos));
                         value = data.charAt(pos - 1) - '0';
                         break;
                     }
@@ -190,14 +136,7 @@ public class CellCollection {
 
         return new CellCollection(cells);
     }
-
-    /**
-     * Returns true, if given <code>data</code> conform to format of given data version.
-     *
-     * @param data
-     * @param dataVersion
-     * @return
-     */
+    //Kiểm tra xem collection có theo đúng định dạng hay không
     public static boolean isValid(String data, int dataVersion) {
         if (dataVersion == DATA_VERSION_PLAIN) {
             return DATA_PATTERN_VERSION_PLAIN.matcher(data).matches();
@@ -211,13 +150,6 @@ public class CellCollection {
             throw new IllegalArgumentException("Unknown version: " + dataVersion);
         }
     }
-
-    /**
-     * Returns true, if given <code>data</code> conform to format of any version.
-     *
-     * @param data
-     * @return
-     */
     public static boolean isValid(String data) {
         return (DATA_PATTERN_VERSION_PLAIN.matcher(data).matches() ||
                 DATA_PATTERN_VERSION_1.matcher(data).matches() ||
@@ -225,12 +157,7 @@ public class CellCollection {
                 DATA_PATTERN_VERSION_3.matcher(data).matches()
         );
     }
-
-    /**
-     * Return true, if no value is entered in any of cells.
-     *
-     * @return
-     */
+    //Hàm kiểm tra xem collection có hoàn toàn trống không
     public boolean isEmpty() {
         for (int r = 0; r < SUDOKU_SIZE; r++) {
             for (int c = 0; c < SUDOKU_SIZE; c++) {
@@ -241,22 +168,15 @@ public class CellCollection {
         }
         return true;
     }
-
+        //Lấy các cell được lưu trữ tạm
     public Cell[][] getCells() {
         return mCells;
-    }
-
-    /**
-     * Gets cell at given position.
-     *
-     * @param rowIndex
-     * @param colIndex
-     * @return
-     */
+    //Lấy vị trí của cell trong collection
     public Cell getCell(int rowIndex, int colIndex) {
         return mCells[rowIndex][colIndex];
     }
 
+    //Tìm cell trong collection chinhsua
     public Cell findFirstCell(int val) {
         for (int r = 0; r < SUDOKU_SIZE; r++) {
             for (int c = 0; c < SUDOKU_SIZE; c++) {
@@ -268,6 +188,7 @@ public class CellCollection {
         return null;
     }
 
+    //Đặt tất cả cell thành phạm quy
     public void markAllCellsAsValid() {
         mOnChangeEnabled = false;
         for (int r = 0; r < SUDOKU_SIZE; r++) {
@@ -279,22 +200,16 @@ public class CellCollection {
         onChange();
     }
 
-    /**
-     * Validates numbers in collection according to the sudoku rules. Cells with invalid
-     * values are marked - you can use getInvalid method of cell to find out whether cell
-     * contains valid value.
-     *
-     * @return True if validation is successful.
-     */
+    //Dùng để kiểm tra xem liệu có cell nào không theo luật hay không
     public boolean validate() {
 
         boolean valid = true;
 
-        // first set all cells as valid
+        //Đặt tất cả các cell là phạm quy
         markAllCellsAsValid();
 
         mOnChangeEnabled = false;
-        // run validation in groups
+        //Chạy kiểm tra trên từng nhóm
         for (CellGroup row : mRows) {
             if (!row.validate()) {
                 valid = false;
@@ -317,6 +232,8 @@ public class CellCollection {
         return valid;
     }
 
+    //Kiểm tra xem collection đã hoàn thành chưa, mọi cell đều có giá trị 
+    //và không cell nào phạm quy
     public boolean isCompleted() {
         for (int r = 0; r < SUDOKU_SIZE; r++) {
             for (int c = 0; c < SUDOKU_SIZE; c++) {
@@ -329,9 +246,7 @@ public class CellCollection {
         return true;
     }
 
-    /**
-     * Marks all cells as editable.
-     */
+    //Khiến cho tất cả cell trở nên chỉnh sửa được
     public void markAllCellsAsEditable() {
         for (int r = 0; r < SUDOKU_SIZE; r++) {
             for (int c = 0; c < SUDOKU_SIZE; c++) {
@@ -341,9 +256,7 @@ public class CellCollection {
         }
     }
 
-    /**
-     * Marks all filled cells (cells with value other than 0) as not editable.
-     */
+    //Khiến cho tất cả cell đã điền trở nên không chỉnh sửa được
     public void markFilledCellsAsNotEditable() {
         for (int r = 0; r < SUDOKU_SIZE; r++) {
             for (int c = 0; c < SUDOKU_SIZE; c++) {
@@ -353,10 +266,7 @@ public class CellCollection {
         }
     }
 
-    /**
-     * Fills in all valid notes for all cells based on the values in each row, column, and sector.
-     * This is a destructive operation in that the existing notes are overwritten.
-     */
+    //Điền tất cả ghi chú có thể đúng vào tất cả các ô, dùng cho debug
     public void fillInNotes() {
         for (int r = 0; r < SUDOKU_SIZE; r++) {
             for (int c = 0; c < SUDOKU_SIZE; c++) {
@@ -375,11 +285,8 @@ public class CellCollection {
         }
     }
 
-    /**
-     * Fills in notes with all values for all cells.
-     * This is a destructive operation in that the existing notes are overwritten.
-     */
-    public void fillInNotesWithAllValues() {
+//Điền vào ghi chú mọi giá trị
+public void fillInNotesWithAllValues() {
         for (int r = 0; r < SUDOKU_SIZE; r++) {
             for (int c = 0; c < SUDOKU_SIZE; c++) {
                 Cell cell = getCell(r, c);
@@ -391,6 +298,7 @@ public class CellCollection {
         }
     }
 
+//Khi điền giá trị vào cell thì xóa note
     public void removeNotesForChangedCell(Cell cell, int number) {
         if (number < 1 || number > 9) {
             return;
@@ -405,13 +313,7 @@ public class CellCollection {
             sector.getCells()[i].setNote(sector.getCells()[i].getNote().removeNumber(number));
         }
     }
-
-    /**
-     * Returns how many times each value is used in <code>CellCollection</code>.
-     * Returns map with entry for each value.
-     *
-     * @return
-     */
+    //Hàm dùng để trả về các giá trị 1-9 và số lần nó được dùng
     public Map<Integer, Integer> getValuesUseCount() {
         Map<Integer, Integer> valuesUseCount = new HashMap<>();
         for (int value = 1; value <= CellCollection.SUDOKU_SIZE; value++) {
@@ -430,11 +332,7 @@ public class CellCollection {
         return valuesUseCount;
     }
 
-    /**
-     * Initializes collection, initialization has two steps:
-     * 1) Groups of cells which must contain unique numbers are created.
-     * 2) Row and column index for each cell is set.
-     */
+     //Tạo collection mới sau đó đưa vào mỗi vùng các giá trị duy nhất
     private void initCollection() {
         mRows = new CellGroup[SUDOKU_SIZE];
         mColumns = new CellGroup[SUDOKU_SIZE];
@@ -451,6 +349,8 @@ public class CellCollection {
                 Cell cell = mCells[r][c];
 
                 cell.initCollection(this, r, c,
+                //dùng để lấy vùng: vd c=(0 /3)*3 = 0, c=(2/3)*3 cũng = 0
+                // khi c = 3 mới qua vùng mới
                         mSectors[((c / 3) * 3) + (r / 3)],
                         mRows[c],
                         mColumns[r]
@@ -459,71 +359,41 @@ public class CellCollection {
         }
     }
 
-    /**
-     * Returns a string representation of this collection in a default
-     * ({@link #DATA_PATTERN_VERSION_3}) format version.
-     *
-     * @see #serialize(StringBuilder, int)
-     *
-     * @return A string representation of this collection.
-     */
+   
+
+
+
+    //Dùng để tạo các chuỗi đọc nhất
     public String serialize() {
         StringBuilder sb = new StringBuilder();
         serialize(sb, DATA_VERSION);
         return sb.toString();
     }
-
-    /**
-     * Returns a string representation of this collection in a given data format version.
-     *
-     * @see #serialize(StringBuilder, int)
-     *
-     * @return A string representation of this collection.
-     */
-    public String serialize(int dataVersion) {
+     
+     public String serialize(int dataVersion) {
         StringBuilder sb = new StringBuilder();
-        serialize(sb, dataVersion);
+        serialize(sb, dataVersion);   
         return sb.toString();
     }
 
-    /**
-     * Writes collection to given <code>StringBuilder</code> in a default
-     * ({@link #DATA_PATTERN_VERSION_3}) data format version.
-     *
-     * @see #serialize(StringBuilder, int)
-     */
-    public void serialize(StringBuilder data) {
+    public void serialize(StringBuilder data) {    
         serialize(data, DATA_VERSION);
     }
-
-    /**
-     * Writes collection to given <code>StringBuilder</code> in a given data format version.
-     * You can later recreate object instance by calling {@link #deserialize(String)} method.
-     *
-     * Supports only {@link #DATA_PATTERN_VERSION_PLAIN} and {@link #DATA_PATTERN_VERSION_3} formats.
-     * All the other data format versions are ignored and treated as
-     * {@link #DATA_PATTERN_VERSION_3} format.
-     *
-     * @see #DATA_PATTERN_VERSION_PLAIN
-     * @see #DATA_PATTERN_VERSION_3
-     *
-     * @param data A <code>StringBuilder</code> where to write data.
-     * @param dataVersion A version of data format.
-     */
-    public void serialize(StringBuilder data, int dataVersion) {
+        public void serialize(StringBuilder data, int dataVersion) {
         if (dataVersion > DATA_VERSION_PLAIN) {
-            data.append("version: ");
-            data.append(dataVersion);
-            data.append("\n");
+        data.append("version: ");
+        data.append(dataVersion);
+        data.append("\n");
         }
         for (int r = 0; r < SUDOKU_SIZE; r++) {
             for (int c = 0; c < SUDOKU_SIZE; c++) {
                 Cell cell = mCells[r][c];
-                cell.serialize(data, dataVersion);
+                  cell.serialize(data, dataVersion);
             }
         }
     }
 
+    //Hàm để xử lí onchange
     public void addOnChangeListener(OnChangeListener listener) {
         if (listener == null) {
             throw new IllegalArgumentException("The listener is null.");
@@ -548,33 +418,6 @@ public class CellCollection {
         }
     }
 
-    /**
-     * Returns whether change notification is enabled.
-     * <p>
-     * If true, change notifications are distributed to the listeners
-     * registered by {@link #addOnChangeListener(OnChangeListener)}.
-     *
-     * @return
-     */
-/*
-    public boolean isOnChangeEnabled() {
-        return mOnChangeEnabled;
-    }
-
-    /***
-     * Enables or disables change notifications, that are distributed to the listeners
-     * registered by {@link #addOnChangeListener(OnChangeListener)}.
-     *
-     * @param onChangeEnabled
-     *\/
-    public void setOnChangeEnabled(boolean onChangeEnabled) {
-    mOnChangeEnabled = onChangeEnabled;
-    }
-*/
-
-    /**
-     * Notify all registered listeners that something has changed.
-     */
     protected void onChange() {
         if (mOnChangeEnabled) {
             synchronized (mChangeListeners) {
@@ -586,9 +429,6 @@ public class CellCollection {
     }
 
     public interface OnChangeListener {
-        /**
-         * Called when anything in the collection changes (cell's value, note, etc.)
-         */
         void onChange();
     }
 }

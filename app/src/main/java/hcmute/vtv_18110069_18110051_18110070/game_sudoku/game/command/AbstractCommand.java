@@ -2,13 +2,10 @@ package hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.command;
 
 import java.util.StringTokenizer;
 
-/**
- * Generic interface for command in application.
- *
- * @author romario
- */
+//Class lệnh chung cho các lệnh khác
 public abstract class AbstractCommand {
 
+    //Khai báo các command
     private static final CommandDef[] commands = {
             new CommandDef(ClearAllNotesCommand.class.getSimpleName(), "c1",
                     ClearAllNotesCommand::new),
@@ -25,7 +22,7 @@ public abstract class AbstractCommand {
             new CommandDef(FillInNotesWithAllValuesCommand.class.getSimpleName(), "c7",
                     FillInNotesWithAllValuesCommand::new)
     };
-
+    //Dùng để tạo chuỗi độc nhất
     public static AbstractCommand deserialize(StringTokenizer data) {
         String cmdShortName = data.nextToken();
         for (CommandDef cmdDef : commands) {
@@ -58,20 +55,16 @@ public abstract class AbstractCommand {
         return getClass().getSimpleName();
     }
 
-    /**
-     * Executes the command.
-     */
+    //Thực thi lệnh
     abstract void execute();
 
-    /**
-     * Undo this command.
-     */
+    //Để undo lại lệnh
     abstract void undo();
 
     private interface CommandCreatorFunction {
         AbstractCommand create();
     }
-
+    //Định nghĩa các command được sử dụng
     private static class CommandDef {
         String mLongName;
         String mShortName;

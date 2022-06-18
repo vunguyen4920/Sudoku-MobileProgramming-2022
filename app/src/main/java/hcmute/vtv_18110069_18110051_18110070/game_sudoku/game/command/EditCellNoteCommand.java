@@ -5,11 +5,12 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.CellNote;
 
 import java.util.StringTokenizer;
 
+//Các lệnh dùng để chỉnh sửa ghi chú, tiện cho việc undo
 public class EditCellNoteCommand extends AbstractSingleCellCommand {
 
     private CellNote mNote;
     private CellNote mOldNote;
-
+    //Lệnh dùng để chỉnh sửa ghi chú
     public EditCellNoteCommand(Cell cell, CellNote note) {
         super(cell);
         mNote = note;
@@ -18,7 +19,7 @@ public class EditCellNoteCommand extends AbstractSingleCellCommand {
     EditCellNoteCommand() {
 
     }
-
+    //Hàm để xử lí độc nhất hóa
     @Override
     public void serialize(StringBuilder data) {
         super.serialize(data);
@@ -34,14 +35,14 @@ public class EditCellNoteCommand extends AbstractSingleCellCommand {
         mNote = CellNote.deserialize(data.nextToken());
         mOldNote = CellNote.deserialize(data.nextToken());
     }
-
+    //Hàm để thực thi lệnh
     @Override
     void execute() {
         Cell cell = getCell();
         mOldNote = cell.getNote();
         cell.setNote(mNote);
     }
-
+    //Hàm để undo lại cùng với giá trị ghi chú cũ
     @Override
     void undo() {
         Cell cell = getCell();

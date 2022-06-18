@@ -4,10 +4,7 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.Cell;
 
 import java.util.StringTokenizer;
 
-/**
- * Created by spimanov on 30.10.17.
- */
-
+//Dùng lệnh để xử lí bên checkpoint
 public abstract class AbstractSingleCellCommand extends AbstractCellCommand {
 
     private int mCellRow;

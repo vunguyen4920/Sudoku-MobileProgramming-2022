@@ -17,27 +17,35 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.command.SetCellVal
 import java.util.ArrayList;
 
 public class SudokuGame {
-
+    /*Các biến dùng để xét State của game: đã bắt đầu, chưa bắt đầu và đã hoàn thành*/
     public static final int GAME_STATE_PLAYING = 0;
     public static final int GAME_STATE_NOT_STARTED = 1;
     public static final int GAME_STATE_COMPLETED = 2;
 
+    //Các biến cơ bản của 1 màn chơi: Id, thời gian tạo, trạng thái của màn chơi, 
+    //thời gian chơi trong màn đó và thời gian lúc ta dừng màn chơi
     private long mId;
     private long mCreated;
     private int mState;
     private long mTime;
     private long mLastPlayed;
+    //Biến cho node
     private String mNote;
+    //Biến cho collection
     private CellCollection mCells;
+    //Biến cho giải nhanh
     private SudokuSolver mSolver;
+    //Biến cho dùng giải nhanh
     private boolean mUsedSolver = false;
     private boolean mRemoveNotesOnEntry = false;
 
     private OnPuzzleSolvedListener mOnPuzzleSolvedListener;
     private CommandStack mCommandStack;
-    // Time when current activity has become active.
+    // biến chưa thời gian lúc ta bắt đầu/tiếp tục chơi,
+    //dùng để tính toàn thời gian đã chơi 1 màn.
     private long mActiveFromTime = -1;
 
+    //Hàm dùng để tạo 1 màn chơi mới rỗng
     public SudokuGame() {
         mTime = 0;
         mLastPlayed = 0;
@@ -54,6 +62,7 @@ public class SudokuGame {
         return game;
     }
 
+    //Hàm dùng để lưu trạng thái hiện tại của màn chơi
     public void saveState(Bundle outState) {
         outState.putLong("id", mId);
         outState.putString("note", mNote);
@@ -64,7 +73,7 @@ public class SudokuGame {
         outState.putString("cells", mCells.serialize());
         outState.putString("command_stack", mCommandStack.serialize());
     }
-
+    //hàm dùng để phục hồi màn chơi
     public void restoreState(Bundle inState) {
         mId = inState.getLong("id");
         mNote = inState.getString("note");
@@ -78,11 +87,11 @@ public class SudokuGame {
         validate();
     }
 
-
+    //Hàm để đặt cho màn chơi khi được giải xong
     public void setOnPuzzleSolvedListener(OnPuzzleSolvedListener l) {
         mOnPuzzleSolvedListener = l;
     }
-
+    //hàm get,set cho ghi chú
     public String getNote() {
         return mNote;
     }
@@ -90,7 +99,7 @@ public class SudokuGame {
     public void setNote(String note) {
         mNote = note;
     }
-
+    //hàm get,set cho thời gian màn chơi được tạo
     public long getCreated() {
         return mCreated;
     }
@@ -98,7 +107,7 @@ public class SudokuGame {
     public void setCreated(long created) {
         mCreated = created;
     }
-
+    //hàm get,set cho trạng thái của màn chơi
     public int getState() {
         return mState;
     }
@@ -107,11 +116,7 @@ public class SudokuGame {
         mState = state;
     }
 
-    /**
-     * Gets time of game-play in milliseconds.
-     *
-     * @return
-     */
+    //hàm get,set cho tổng thời gian chơi của màn
     public long getTime() {
         if (mActiveFromTime != -1) {
             return mTime + SystemClock.uptimeMillis() - mActiveFromTime;
@@ -119,42 +124,36 @@ public class SudokuGame {
             return mTime;
         }
     }
-
-    /**
-     * Sets time of play in milliseconds.
-     *
-     * @param time
-     */
     public void setTime(long time) {
         mTime = time;
     }
 
+    //hàm get,set cho thời gian lần cuối ta dừng màn chơi
     public long getLastPlayed() {
         return mLastPlayed;
     }
-
     public void setLastPlayed(long lastPlayed) {
         mLastPlayed = lastPlayed;
     }
 
+    //hàm get,set cho collection lưu trữ cell cho màn chơi
     public CellCollection getCells() {
         return mCells;
     }
-
     public void setCells(CellCollection cells) {
         mCells = cells;
         validate();
         mCommandStack = new CommandStack(mCells);
     }
 
+    //hàm get,set cho id của màn chơi
     public long getId() {
         return mId;
     }
-
     public void setId(long id) {
         mId = id;
     }
-
+    //hàm get,set cho Stack chứa command
     public CommandStack getCommandStack() {
         return mCommandStack;
     }
@@ -167,12 +166,7 @@ public class SudokuGame {
         mRemoveNotesOnEntry = removeNotesOnEntry;
     }
 
-    /**
-     * Sets value for the given cell. 0 means empty cell.
-     *
-     * @param cell
-     * @param value
-     */
+    //Gắn giá trị cho 1 cell sau đó xem thử màn chơi đã được giải hay chưa
     public void setCellValue(Cell cell, int value) {
         if (cell == null) {
             throw new IllegalArgumentException("Cell cannot be null.");
@@ -198,12 +192,7 @@ public class SudokuGame {
         }
     }
 
-    /**
-     * Sets note attached to the given cell.
-     *
-     * @param cell
-     * @param note
-     */
+    //Gắn ghi chú cho 1 cell
     public void setCellNote(Cell cell, CellNote note) {
         if (cell == null) {
             throw new IllegalArgumentException("Cell cannot be null.");
@@ -216,30 +205,29 @@ public class SudokuGame {
             executeCommand(new EditCellNoteCommand(cell, note));
         }
     }
-
+    //Hàm dùng để gọi bên command
     private void executeCommand(AbstractCommand c) {
         mCommandStack.execute(c);
     }
 
-    /**
-     * Undo last command.
-     */
+    //Undo lại command
     public void undo() {
         mCommandStack.undo();
     }
-
+    //kiểm tra xem có command để undo hay không
     public boolean hasSomethingToUndo() {
         return mCommandStack.hasSomethingToUndo();
     }
 
+    //Đặt checkpoint để undo
     public void setUndoCheckpoint() {
         mCommandStack.setCheckpoint();
     }
-
+    //Undo đến checkpoint
     public void undoToCheckpoint() {
         mCommandStack.undoToCheckpoint();
     }
-
+    //Kiểm tra xem có checkpoint hay không
     public boolean hasUndoCheckpoint() {
         return mCommandStack.hasCheckpoint();
     }
@@ -247,7 +235,8 @@ public class SudokuGame {
     public void undoToBeforeMistake() {
         mCommandStack.undoToSolvableState();
     }
-
+    //Cho biết cell nào được chỉnh sửa cuối khi màn chơi dừng lại
+    //dùng cho việc tiếp tục màn chơi
     @Nullable
     public Cell getLastChangedCell() {
         return mCommandStack.getLastChangedCell();
@@ -256,41 +245,36 @@ public class SudokuGame {
     /**
      * Start game-play.
      */
+    //Bắt đầu/tiếp tục màn chơi
     public void start() {
         mState = GAME_STATE_PLAYING;
         resume();
     }
 
+    //Dùng để tiếp tục màn chơi,đặt thời gian hoạt động lại bằng khi tiếp tục
+    //dùng để tính toán tổng thời gian chơi
     public void resume() {
-        // reset time we have spent playing so far, so time when activity was not active
-        // will not be part of the game play time
         mActiveFromTime = SystemClock.uptimeMillis();
     }
 
-    /**
-     * Pauses game-play (for example if activity pauses).
-     */
+    //Dùng để dừng màn chơi, tính tổng thời gian chơi sau đó bỏ mốc thời gian hoạt động
     public void pause() {
-        // save time we have spent playing so far - it will be reseted after resuming
         mTime += SystemClock.uptimeMillis() - mActiveFromTime;
         mActiveFromTime = -1;
 
         setLastPlayed(System.currentTimeMillis());
     }
 
-    /**
-     * Checks if a solution to the puzzle exists
-     */
-    public boolean isSolvable() {
+    //Kiểm tra xem màn chơi được thêm phần giải chưa
+    public boolean isSolvable () {
         mSolver = new SudokuSolver();
         mSolver.setPuzzle(mCells);
         ArrayList<int[]> finalValues = mSolver.solve();
         return !finalValues.isEmpty();
     }
 
-    /**
-     * Solves puzzle from original state
-     */
+    
+    //Dùng để giải nhanh màn chơi: màn chơi lập tức hoàn thành
     public void solve() {
         mUsedSolver = true;
         mSolver = new SudokuSolver();
@@ -305,13 +289,12 @@ public class SudokuGame {
         }
     }
 
+    //Kiểm tra xem có được dùng giải nhanh hay không
     public boolean usedSolver() {
         return mUsedSolver;
     }
 
-    /**
-     * Solves puzzle and fills in correct value for selected cell
-     */
+    //Dùng để có giá trị đúng của 1 cell, dùng cho phần hint
     public void solveCell(Cell cell) {
         mSolver = new SudokuSolver();
         mSolver.setPuzzle(mCells);
@@ -327,17 +310,13 @@ public class SudokuGame {
         }
     }
 
-    /**
-     * Finishes game-play. Called when puzzle is solved.
-     */
+    //Dùng khi kết thúc màn chơi
     private void finish() {
         pause();
         mState = GAME_STATE_COMPLETED;
     }
 
-    /**
-     * Resets game.
-     */
+    //Đặt lại màn chơi về dạng ban đầu
     public void reset() {
         for (int r = 0; r < CellCollection.SUDOKU_SIZE; r++) {
             for (int c = 0; c < CellCollection.SUDOKU_SIZE; c++) {
@@ -356,42 +335,31 @@ public class SudokuGame {
         mUsedSolver = false;
     }
 
-    /**
-     * Returns true, if puzzle is solved. In order to know the current state, you have to
-     * call validate first.
-     *
-     * @return
-     */
+    //Kiểm tra xem màn chơi đã hoàn thành hay chưa
     public boolean isCompleted() {
         return mCells.isCompleted();
     }
 
+    //Dọn sạch hết ghi chú
     public void clearAllNotes() {
         executeCommand(new ClearAllNotesCommand());
     }
 
-    /**
-     * Fills in possible values which can be entered in each cell.
-     */
+    //Đặt ghi chú cho cell
     public void fillInNotes() {
         executeCommand(new FillInNotesCommand());
     }
 
-    /**
-     * Fills in all values which can be entered in each cell.
-     */
+    //Đặt ghi chú cho các ghi chú tất cả giá trị từ 1-9
     public void fillInNotesWithAllValues() { executeCommand(new FillInNotesWithAllValuesCommand()); }
 
+    //Kiểm tra xem cell có đúng theo luật sudoku không
     public void validate() {
         mCells.validate();
     }
 
+    //Được dùng khi màn chơi được giải
     public interface OnPuzzleSolvedListener {
-        /**
-         * Occurs when puzzle is solved.
-         *
-         * @return
-         */
         void onPuzzleSolved();
     }
 }

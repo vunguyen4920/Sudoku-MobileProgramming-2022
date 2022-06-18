@@ -7,9 +7,9 @@ import android.content.SharedPreferences.Editor;
 import androidx.preference.PreferenceManager;
 
 /**
- * This class is responsible for persisting of control panel's state.
  *
- * @author romario
+ * Class này giúp cho việc lưu state người dùng chọn cách nhập dữ liệu nào
+ *
  */
 public class IMControlPanelStatePersister {
 

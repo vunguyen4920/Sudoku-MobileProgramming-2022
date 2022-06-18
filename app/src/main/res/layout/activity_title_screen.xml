@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_title_screen_logo" />
+        app:srcCompat="@drawable/ic_initial_screen_logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,20 +27,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/resume" />
+            android:background="@drawable/primary_button"
+            android:text="@string/resume_button_text" />
 
         <Button
-            android:id="@+id/sudoku_lists_button"
+            android:id="@+id/new_game_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/sudoku_lists" />
+            android:layout_marginTop="20dp"
+            android:background="@drawable/primary_button"
+            android:text="@string/new_game_button_text" />
+
+        <Button
+            android:id="@+id/sudoku_list_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/primary_button"
+            android:text="@string/sudoku_list_button_text" />
 
         <Button
             android:id="@+id/settings_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
+            android:background="@drawable/accent_primary_button"
             android:text="@string/settings" />
 
     </LinearLayout>

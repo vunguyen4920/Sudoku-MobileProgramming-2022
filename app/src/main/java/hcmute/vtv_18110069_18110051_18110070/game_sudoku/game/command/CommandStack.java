@@ -9,17 +9,18 @@ import java.util.ListIterator;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+//Stack để chứa các lệnh, tiện cho việc undo, chỉ cần xóa lênh trong stack để rollback
 public class CommandStack {
+    //Stack để lưu lại các lệnh được thực thi
     private Stack<AbstractCommand> mCommandStack = new Stack<>();
-
-    // TODO: I need cells collection, because I have to call validate on it after some
-    //	commands. CellCollection should be able to validate itself on change.
+    //Biến chứa collection
     private CellCollection mCells;
-
+    //Tạo stack có sẵn collection
     public CommandStack(CellCollection cells) {
         mCells = cells;
     }
 
+    //Đọc giá trị độc nhất
     public static CommandStack deserialize(String data, CellCollection cells) {
         StringTokenizer st = new StringTokenizer(data, "|");
         return deserialize(st, cells);
@@ -36,6 +37,7 @@ public class CommandStack {
         return result;
     }
 
+    //Độc nhất hóa giá trị
     public String serialize() {
         StringBuilder sb = new StringBuilder();
         serialize(sb);
@@ -50,15 +52,16 @@ public class CommandStack {
         }
     }
 
+    //Làm trống Stack
     public boolean empty() {
         return mCommandStack.empty();
     }
-
+    //Thực thi lệnh
     public void execute(AbstractCommand command) {
         push(command);
         command.execute();
     }
-
+    //Undo lệnh
     public void undo() {
         if (!mCommandStack.empty()) {
             AbstractCommand c = pop();
@@ -66,7 +69,7 @@ public class CommandStack {
             validateCells();
         }
     }
-
+    //Đặt checkpoint để undo
     public void setCheckpoint() {
         if (!mCommandStack.empty()) {
             AbstractCommand c = mCommandStack.peek();
@@ -76,6 +79,7 @@ public class CommandStack {
         push(new CheckpointCommand());
     }
 
+    //Kiểm tra xem có checkpoint không
     public boolean hasCheckpoint() {
         for (AbstractCommand c : mCommandStack) {
             if (c instanceof CheckpointCommand)
@@ -84,11 +88,8 @@ public class CommandStack {
         return false;
     }
 
+    //Undo đến checkpoint bằng cách đẩy các command ra khỏi stack
     public void undoToCheckpoint() {
-        /*
-         * I originally planned to just call undo but this way it doesn't need to
-         * validateCells() until the run is complete
-         */
         AbstractCommand c;
         while (!mCommandStack.empty()) {
             c = mCommandStack.pop();
@@ -100,6 +101,7 @@ public class CommandStack {
         validateCells();
     }
 
+    //Kiểm tra xem giá trị của cell có đúng như giải hay không
     private boolean hasMistakes(ArrayList<int[]> finalValues) {
         for (int[] rowColVal : finalValues) {
             int row = rowColVal[0];
@@ -115,6 +117,7 @@ public class CommandStack {
         return false;
     }
 
+    //Undo lại các command bị sai đến khi không còn cell bị sai nữa
     public void undoToSolvableState() {
         SudokuSolver solver = new SudokuSolver();
         solver.setPuzzle(mCells);
@@ -127,10 +130,12 @@ public class CommandStack {
         validateCells();
     }
 
+    //Kiểm tra xem stack có rỗng hay không
     public boolean hasSomethingToUndo() {
         return mCommandStack.size() != 0;
     }
 
+    //Lấy cell có thay đổi cuối cùng, dùng trong phần tiếp tục màn chơi
     public Cell getLastChangedCell() {
         ListIterator<AbstractCommand> iter = mCommandStack.listIterator(mCommandStack.size());
         while (iter.hasPrevious()) {
@@ -145,6 +150,7 @@ public class CommandStack {
         return null;
     }
 
+    //Hàm dùng để thêm command vào stack
     private void push(AbstractCommand command) {
         if (command instanceof AbstractCellCommand) {
             ((AbstractCellCommand) command).setCells(mCells);
@@ -152,6 +158,7 @@ public class CommandStack {
         mCommandStack.push(command);
     }
 
+    //Hàm dùng để đẩy command ra khỏi stack
     private AbstractCommand pop() {
         return mCommandStack.pop();
     }

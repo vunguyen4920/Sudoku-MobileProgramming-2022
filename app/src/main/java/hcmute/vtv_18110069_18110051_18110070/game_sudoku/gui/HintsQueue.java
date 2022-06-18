@@ -13,9 +13,17 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.R;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ *
+ * Là 1 UI Class giúp cho việc show dialog gợi ý hoặc hướng dẫn cho người chơi
+ *
+ * Cơ bản thì vẫn là 1 dạng dialog
+ * Nhưng về mặt UI thì dialog này giúp cho người chơi biết
+ * đây là thông tin hương dẫn từ hệ thống
+ *
+ */
 public class HintsQueue {
-    private static final String PREF_FILE_NAME = "hints";
-    // TODO: should be persisted in activity's state
+    private static final String PREF_NAME = "hints";
     private final Queue<Message> mMessages;
     private final AlertDialog mHintDialog;
     private Context mContext;
@@ -24,7 +32,7 @@ public class HintsQueue {
 
     public HintsQueue(Context context) {
         mContext = context;
-        mPrefs = mContext.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        mPrefs = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
         SharedPreferences gameSettings = PreferenceManager.getDefaultSharedPreferences(context);
         gameSettings.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {

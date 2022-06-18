@@ -4,13 +4,13 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.Cell;
 
 import java.util.StringTokenizer;
 
+//lệnh dùng để đặt giá trị cho cell và xóa command của nó
 public class SetCellValueAndRemoveNotesCommand extends AbstractMultiNoteCommand {
 
     private int mCellRow;
     private int mCellColumn;
     private int mValue;
     private int mOldValue;
-
     public SetCellValueAndRemoveNotesCommand(Cell cell, int value) {
         mCellRow = cell.getRowIndex();
         mCellColumn = cell.getColumnIndex();
@@ -19,11 +19,11 @@ public class SetCellValueAndRemoveNotesCommand extends AbstractMultiNoteCommand 
 
     SetCellValueAndRemoveNotesCommand() {
     }
-
+    //Hàm để lấy cell
     public Cell getCell() {
         return getCells().getCell(mCellRow, mCellColumn);
     }
-
+    //Hàm để xử lí độc nhất hóa
     @Override
     public void serialize(StringBuilder data) {
         super.serialize(data);
@@ -43,7 +43,7 @@ public class SetCellValueAndRemoveNotesCommand extends AbstractMultiNoteCommand 
         mValue = Integer.parseInt(data.nextToken());
         mOldValue = Integer.parseInt(data.nextToken());
     }
-
+    //Thực thi lệnh và lưu lại giá trị cell cũ
     @Override
     void execute() {
         mOldNotes.clear();
@@ -54,7 +54,7 @@ public class SetCellValueAndRemoveNotesCommand extends AbstractMultiNoteCommand 
         mOldValue = cell.getValue();
         cell.setValue(mValue);
     }
-
+    //Undo lại lệnh và thêm giá trị cũ lại
     @Override
     void undo() {
         super.undo();

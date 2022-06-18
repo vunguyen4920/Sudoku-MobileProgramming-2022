@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+//Lệnh dùng cho nhiều ghi chú cho colection
 public abstract class AbstractMultiNoteCommand extends AbstractCellCommand {
 
     protected List<NoteEntry> mOldNotes = new ArrayList<>();
 
+    //Hàm để đọc giá trị/hoặc độc nhất hóa
     @Override
     public void serialize(StringBuilder data) {
         super.serialize(data);
@@ -37,6 +39,7 @@ public abstract class AbstractMultiNoteCommand extends AbstractCellCommand {
         }
     }
 
+    ////Để undo lại lệnh
     @Override
     void undo() {
         CellCollection cells = getCells();
@@ -46,6 +49,7 @@ public abstract class AbstractMultiNoteCommand extends AbstractCellCommand {
         }
     }
 
+    //Lưu lại các ghi chú để có cần thiết cho undo
     protected void saveOldNotes() {
         CellCollection cells = getCells();
         for (int r = 0; r < CellCollection.SUDOKU_SIZE; r++) {
@@ -54,7 +58,7 @@ public abstract class AbstractMultiNoteCommand extends AbstractCellCommand {
             }
         }
     }
-
+    
     protected static class NoteEntry {
         public int rowIndex;
         public int colIndex;

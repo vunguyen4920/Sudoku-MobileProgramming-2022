@@ -12,16 +12,28 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.CellNote;
 
 import java.util.Map;
 
+/**
+ *
+ * Người dùng sẽ chạm vào ô và lựa chọn số họ muốn trên popup.
+ *
+ */
 public class IMPopup extends InputMethod {
-
-    private boolean mHighlightCompletedValues = true;
-    private boolean mShowNumberTotals = false;
 
     private IMPopupDialog mEditCellDialog;
     private Cell mSelectedCell;
-    /**
-     * Occurs when user selects number in EditCellDialog.
-     */
+    private boolean mHighlightCompletedValues = true;
+    private boolean mShowNumberTotals = false;
+
+    private IMPopupDialog.OnNoteEditListener mOnNoteEditListener = new IMPopupDialog.OnNoteEditListener() {
+        @Override
+        public boolean onNoteEdit(Integer[] numbers) {
+            if (mSelectedCell != null) {
+                mGame.setCellNote(mSelectedCell, CellNote.fromIntArray(numbers));
+            }
+            return true;
+        }
+    };
+
     private IMPopupDialog.OnNumberEditListener mOnNumberEditListener = new IMPopupDialog.OnNumberEditListener() {
         @Override
         public boolean onNumberEdit(int number) {
@@ -32,33 +44,13 @@ public class IMPopup extends InputMethod {
             return true;
         }
     };
-    /**
-     * Occurs when user edits note in EditCellDialog
-     */
-    private IMPopupDialog.OnNoteEditListener mOnNoteEditListener = new IMPopupDialog.OnNoteEditListener() {
-        @Override
-        public boolean onNoteEdit(Integer[] numbers) {
-            if (mSelectedCell != null) {
-                mGame.setCellNote(mSelectedCell, CellNote.fromIntArray(numbers));
-            }
-            return true;
-        }
-    };
-    /**
-     * Occurs when popup dialog is closed.
-     */
+
     private OnDismissListener mOnPopupDismissedListener = dialog -> mBoard.hideTouchedCellHint();
 
     public boolean getHighlightCompletedValues() {
         return mHighlightCompletedValues;
     }
 
-    /**
-     * If set to true, buttons for numbers, which occur in {@link CellCollection}
-     * more than {@link CellCollection#SUDOKU_SIZE}-times, will be highlighted.
-     *
-     * @param highlightCompletedValues
-     */
     public void setHighlightCompletedValues(boolean highlightCompletedValues) {
         mHighlightCompletedValues = highlightCompletedValues;
     }
@@ -137,7 +129,6 @@ public class IMPopup extends InputMethod {
 
     @Override
     protected void onPause() {
-        // release dialog resource (otherwise WindowLeaked exception is logged)
         if (mEditCellDialog != null) {
             mEditCellDialog.cancel();
         }

@@ -4,34 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-/**
- * Note attached to cell. This object is immutable by design.
- *
- * @author romario
- * <p>
- * 30.10.2017
- * updated by spimanov. Sets were replaced by bitwise operations
- */
+//Dùng cho việc ghi chú các giá trị có thể đúng của cell
 public class CellNote {
 
     public static final CellNote EMPTY = new CellNote();
     private final short mNotedNumbers;
 
+    //Để ghi chú là rỗng
     public CellNote() {
         mNotedNumbers = 0;
     }
 
+    //Lưu ghi chú
     private CellNote(short notedNumbers) {
         mNotedNumbers = notedNumbers;
     }
 
-    /**
-     * Creates instance from given string (string which has been
-     * created by {@link #serialize(StringBuilder)} or {@link #serialize()} method).
-     * earlier.
-     *
-     * @param note
-     */
+    //Độc nhất hóa giá trị để sử dụng cho command
     public static CellNote deserialize(String note) {
         return deserialize(note, CellCollection.DATA_VERSION);
     }
@@ -59,12 +48,7 @@ public class CellNote {
     }
 
 
-    /**
-     * Creates note instance from given <code>int</code> array.
-     *
-     * @param notedNums Array of integers, which should be part of note.
-     * @return New note instance.
-     */
+    //Tạo instance mới cho ghi chú từ chuỗi Interger đưa vào
     public static CellNote fromIntArray(Integer[] notedNums) {
         int notedNumbers = 0;
 
@@ -76,12 +60,7 @@ public class CellNote {
     }
 
 
-    /**
-     * Appends string representation of this object to the given <code>StringBuilder</code>.
-     * You can later recreate object from this string by calling {@link #deserialize(String)}.
-     *
-     * @param data
-     */
+    //Độc nhất hóa giá trị
     public void serialize(StringBuilder data) {
         data.append(mNotedNumbers);
         data.append("|");
@@ -93,11 +72,7 @@ public class CellNote {
         return sb.toString();
     }
 
-    /**
-     * Returns numbers currently noted in cell.
-     *
-     * @return
-     */
+    //Trả các ghi chú được lưu
     public List<Integer> getNotedNumbers() {
 
         List<Integer> result = new ArrayList<>();
@@ -112,12 +87,7 @@ public class CellNote {
         return result;
     }
 
-    /**
-     * Toggles noted number: if number is already noted, it will be removed otherwise it will be added.
-     *
-     * @param number Number to toggle.
-     * @return New CellNote instance with changes.
-     */
+    //Trong chế độ Toggles: Để thêm ghi chú nếu nó chưa có, còn nếu có rồi thì gỡ
     public CellNote toggleNumber(int number) {
         if (number < 1 || number > 9)
             throw new IllegalArgumentException("Number must be between 1-9.");
@@ -125,12 +95,7 @@ public class CellNote {
         return new CellNote((short) (mNotedNumbers ^ (1 << (number - 1))));
     }
 
-    /**
-     * Adds number to the cell's note (if not present already).
-     *
-     * @param number
-     * @return
-     */
+    //Thêm số vào ghi chú nếu số đó chưa có sẵn
     public CellNote addNumber(int number) {
         if (number < 1 || number > 9)
             throw new IllegalArgumentException("Number must be between 1-9.");
@@ -138,12 +103,7 @@ public class CellNote {
         return new CellNote((short) (mNotedNumbers | (1 << (number - 1))));
     }
 
-    /**
-     * Removes number from the cell's note.
-     *
-     * @param number
-     * @return
-     */
+    //Xóa số từ ghi chú
     public CellNote removeNumber(int number) {
         if (number < 1 || number > 9)
             throw new IllegalArgumentException("Number must be between 1-9.");
@@ -151,6 +111,7 @@ public class CellNote {
         return new CellNote((short) (mNotedNumbers & ~(1 << (number - 1))));
     }
 
+    //Check xem giá trị của ghi chú có phải từ 1-9 không
     public boolean hasNumber(int number) {
         if (number < 1 || number > 9) {
             return false;
@@ -159,15 +120,12 @@ public class CellNote {
         return (mNotedNumbers & (1 << (number - 1))) != 0;
     }
 
+    //Xóa sạch ghi chú
     public CellNote clear() {
         return new CellNote();
     }
 
-    /**
-     * Returns true, if note is empty.
-     *
-     * @return True if note is empty.
-     */
+    //Xen thử xem ghi chú có trống hay không
     public boolean isEmpty() {
         return mNotedNumbers == 0;
     }

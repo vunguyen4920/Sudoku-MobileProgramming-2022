@@ -2,15 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    compileSdk 32
 
     defaultConfig {
         applicationId "hcmute.vtv_18110069_18110051_18110070.game_sudoku"
-        minSdkVersion 19
+        minSdk 19
         targetSdkVersion 30
-        versionCode 20210622
-        versionName "3.8.0"
 
         vectorDrawables.useSupportLibrary true
     }
@@ -26,31 +23,34 @@ android {
         }
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-    }
 
     compileOptions {
         encoding "UTF-8"
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     packagingOptions {
-        exclude 'META-INF/*'
+        jniLibs {
+            excludes += ['META-INF/*']
+        }
+        resources {
+            excludes += ['META-INF/*']
+        }
+    }
+
+    lint {
+        checkReleaseBuilds false
     }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.google.firebase:firebase-auth'
     implementation platform('com.google.firebase:firebase-bom:30.0.2')
     implementation 'com.google.gms:google-services:3.1.2' // <== this guy
-
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.preference:preference:1.2.0'
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
-        implementation 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'
-    // TODO: Migrate entirely to AndroidX Preference, using this version with it
-    //implementation 'com.github.attenzione:android-ColorPickerPreference:v1.2'
+    implementation 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'
 }

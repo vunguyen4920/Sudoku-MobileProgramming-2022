@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.FolderListActivity"
+            android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.DifficultiesListActivity"
             android:label="@string/app_name" />
         <activity
             android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuListActivity"
@@ -32,63 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuImportActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Dialog">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:mimeType="application/x-opensudoku"
-                    android:scheme="content" />
-                <data
-                    android:mimeType="application/x-opensudoku"
-                    android:scheme="file" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="*"
-                    android:mimeType="*/*"
-                    android:pathPattern=".*\\.sdm"
-                    android:scheme="file" />
-                <data
-                    android:host="*"
-                    android:mimeType="*/*"
-                    android:pathPattern=".*\\.sdm"
-                    android:scheme="content" />
-                <data
-                    android:host="*"
-                    android:mimeType="*/*"
-                    android:pathPattern=".*\\.opensudoku"
-                    android:scheme="file" />
-                <data
-                    android:host="*"
-                    android:mimeType="*/*"
-                    android:pathPattern=".*\\.opensudoku"
-                    android:scheme="content" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:mimeType="*/*"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuExportActivity"
-            android:label="@string/app_name" />
-        <activity
-            android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuPlayActivity"
+            android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.PlayActivity"
             android:label="@string/app_name" />
         <activity
             android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.GameSettingsActivity"

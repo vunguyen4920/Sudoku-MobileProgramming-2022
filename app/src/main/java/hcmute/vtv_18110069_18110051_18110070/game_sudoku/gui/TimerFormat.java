@@ -3,23 +3,17 @@ package hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui;
 import java.util.Formatter;
 
 /**
- * Game time formatter.
  *
- * @author romario
+ * Class TimerFormat giúp cho việc format thời gian
+ * trong trường hợp này chỉ format thành định dạng mm:ss
+ *
  */
-public class GameTimeFormat {
+public class TimerFormat {
     private static final int TIME_99_99 = 99 * 99 * 1000;
 
     private StringBuilder mTimeText = new StringBuilder();
     private Formatter mGameTimeFormatter = new Formatter(mTimeText);
 
-    /**
-     * Formats time to format of mm:ss, hours are
-     * never displayed, only total number of minutes.
-     *
-     * @param time Time in milliseconds.
-     * @return
-     */
     public String format(long time) {
         mTimeText.setLength(0);
         if (time > TIME_99_99) {

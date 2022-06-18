@@ -7,6 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.utils.ThemeUtils;
 
+/**
+ *
+ * Đây là base class phục vụ cho việc truyền thiết lập giao diện cho
+ * toàn bộ các activity.
+ *
+ */
 public class ThemedActivity extends AppCompatActivity {
     private int mThemeId = 0;
     private long mTimestampWhenApplyingTheme = 0;

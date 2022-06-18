@@ -15,17 +15,16 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.CellNote;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.SudokuGame;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.HintsQueue;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuBoardView;
-import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuPlayActivity;
+import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.PlayActivity;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.utils.ThemeUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class represents following type of number input workflow: Number buttons are displayed
- * in the sidebar, user selects one number and then fill values by tapping the cells.
  *
- * @author romario
+ * Người dùng sẽ chọn nút số hiển thị sẵn trên màn hình, sau đó chạm vào ô.
+ *
  */
 public class IMSingleNumber extends InputMethod {
 
@@ -44,7 +43,7 @@ public class IMSingleNumber extends InputMethod {
     private Map<Integer, Button> mNumberButtons;
     private ImageButton mSwitchNumNoteButton;
 
-    private SudokuPlayActivity.OnSelectedNumberChangedListener mOnSelectedNumberChangedListener = null;
+    private PlayActivity.OnSelectedNumberChangedListener mOnSelectedNumberChangedListener = null;
     private View.OnTouchListener mNumberButtonTouched = (view, motionEvent) -> {
         mSelectedNumber = (Integer) view.getTag();
         onSelectedNumberChanged();
@@ -72,12 +71,6 @@ public class IMSingleNumber extends InputMethod {
         return mHighlightCompletedValues;
     }
 
-    /**
-     * If set to true, buttons for numbers, which occur in {@link CellCollection}
-     * more than {@link CellCollection#SUDOKU_SIZE}-times, will be highlighted.
-     *
-     * @param highlightCompletedValues
-     */
     public void setHighlightCompletedValues(boolean highlightCompletedValues) {
         mHighlightCompletedValues = highlightCompletedValues;
     }
@@ -106,13 +99,13 @@ public class IMSingleNumber extends InputMethod {
         mHighlightSimilar = highlightSimilar;
     }
 
-    public void setmOnSelectedNumberChangedListener(SudokuPlayActivity.OnSelectedNumberChangedListener l) {
+    public void setmOnSelectedNumberChangedListener(PlayActivity.OnSelectedNumberChangedListener l) {
         mOnSelectedNumberChangedListener = l;
     }
 
     @Override
     protected void initialize(Context context, IMControlPanel controlPanel,
-                              SudokuGame game, SudokuBoardView board, HintsQueue hintsQueue) {
+            SudokuGame game, SudokuBoardView board, HintsQueue hintsQueue) {
         super.initialize(context, controlPanel, game, board, hintsQueue);
 
         game.getCells().addOnChangeListener(mOnCellsChangeListener);
@@ -176,16 +169,16 @@ public class IMSingleNumber extends InputMethod {
                 break;
         }
 
-        // TODO: sometimes I change background too early and button stays in pressed state
-        // this is just ugly workaround
         mGuiHandler.postDelayed(() -> {
             for (Button b : mNumberButtons.values()) {
                 if (b.getTag().equals(mSelectedNumber)) {
-                    b.setTextAppearance(mContext, ThemeUtils.getCurrentThemeStyle(mContext, android.R.attr.textAppearanceLarge));
+                    b.setTextAppearance(mContext,
+                            ThemeUtils.getCurrentThemeStyle(mContext, android.R.attr.textAppearanceLarge));
                     ThemeUtils.applyIMButtonStateToView(b, ThemeUtils.IMButtonStyle.ACCENT);
                     b.requestFocus();
                 } else {
-                    b.setTextAppearance(mContext, ThemeUtils.getCurrentThemeStyle(mContext, android.R.attr.textAppearanceButton));
+                    b.setTextAppearance(mContext,
+                            ThemeUtils.getCurrentThemeStyle(mContext, android.R.attr.textAppearanceButton));
                     ThemeUtils.applyIMButtonStateToView(b, ThemeUtils.IMButtonStyle.DEFAULT);
                 }
             }
@@ -199,7 +192,8 @@ public class IMSingleNumber extends InputMethod {
                     boolean highlightValue = entry.getValue() >= CellCollection.SUDOKU_SIZE;
                     boolean selected = entry.getKey() == mSelectedNumber;
                     if (highlightValue && !selected) {
-                        ThemeUtils.applyIMButtonStateToView(mNumberButtons.get(entry.getKey()), ThemeUtils.IMButtonStyle.ACCENT_HIGHCONTRAST);
+                        ThemeUtils.applyIMButtonStateToView(mNumberButtons.get(entry.getKey()),
+                                ThemeUtils.IMButtonStyle.ACCENT_HIGHCONTRAST);
                     }
                 }
             }
@@ -239,7 +233,8 @@ public class IMSingleNumber extends InputMethod {
     }
 
     private void onSelectedNumberChanged() {
-        if (mBidirectionalSelection && mHighlightSimilar && mOnSelectedNumberChangedListener != null && !mBoard.isReadOnly()) {
+        if (mBidirectionalSelection && mHighlightSimilar && mOnSelectedNumberChangedListener != null
+                && !mBoard.isReadOnly()) {
             mOnSelectedNumberChangedListener.onSelectedNumberChanged(mSelectedNumber);
             mBoard.setHighlightedValue(mSelectedNumber);
         }

@@ -19,25 +19,21 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.SudokuGame;
 import java.util.Collection;
 
 /**
- * Sudoku board widget.
+ * Component này dùng để kẻ grid và hỗ trợ người chơi:
+ * - Khi bấm vào 1 ô thì sẽ hiển thị sáng hơn so với các ô khác
+ * - Cũng như là hiển thị sáng hơn cho dòng và cột tương ứng với ô trên
  *
- * @author romario
  */
 public class   SudokuBoardView extends View {
 
     public static final int DEFAULT_BOARD_SIZE = 100;
 
-    /**
-     * "Color not set" value. (In relation to {@link Color}, it is in fact black color with
-     * alpha channel set to 0 => that means it is completely transparent).
-     */
     private static final int NO_COLOR = 0;
 
     private float mCellWidth;
     private float mCellHeight;
 
     private Cell mTouchedCell;
-    // TODO: should I synchronize access to mSelectedCell?
     private Cell mSelectedCell;
     private int mHighlightedValue = 0;
     private boolean mReadonly = false;
@@ -70,9 +66,8 @@ public class   SudokuBoardView extends View {
         this(context, null);
     }
 
-    // TODO: do I need an defStyle?
-    public SudokuBoardView(Context context, AttributeSet attrs/*, int defStyle*/) {
-        super(context, attrs/*, defStyle*/);
+    public SudokuBoardView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
         setFocusable(true);
         setFocusableInTouchMode(true);
@@ -111,10 +106,6 @@ public class   SudokuBoardView extends View {
 
         a.recycle();
     }
-
-    //	public SudokuBoardView(Context context, AttributeSet attrs) {
-    //		this(context, attrs, R.attr.sudokuBoardViewStyle);
-    //	}
 
     public int getLineColor() {
         return mLinePaint.getColor();

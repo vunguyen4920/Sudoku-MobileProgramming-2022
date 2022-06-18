@@ -2,44 +2,41 @@ package hcmute.vtv_18110069_18110051_18110070.game_sudoku.game;
 
 import java.util.StringTokenizer;
 
-/**
- * Sudoku cell. Every cell has value, some notes attached to it and some basic
- * state (whether it is editable and valid).
- *
- * @author romario
- */
+//cell chứa thông tin về 1 ô trong sudoku
 public class Cell {
-    private final Object mCellCollectionLock = new Object();
     // if cell is included in collection, here are some additional information
     // about collection and cell's position in it
+
+    //Biến lưu trữ thông tin về màn chơi bao gồm cell, vị trí của nó trong collection
+    //lưu trữ các cell
     private CellCollection mCellCollection;
+    private final Object mCellCollectionLock = new Object();
     private int mRowIndex = -1;
     private int mColumnIndex = -1;
-    private CellGroup mSector; // sector containing this cell
-    private CellGroup mRow; // row containing this cell
-    private CellGroup mColumn; // column containing this cell
 
+    //Vị trí của cell: vùng, dòng và cột
+    private CellGroup mSector; 
+    private CellGroup mRow; 
+    private CellGroup mColumn; 
+
+    //các giá trị cơ bản của 1 cell: giá trị hiện tại của cell, các giá trị phỏng đoán,
+    //đây là cell được điền vào hay được tạo sẵn và nó có theo đúng luật của sudoku hay không
     private int mValue;
     private CellNote mNote;
     private boolean mEditable;
     private boolean mValid;
 
-    /**
-     * Creates empty editable cell.
-     */
+    //Tạo 1 cell mới và có thể chỉnh sửa/điền được
     public Cell() {
         this(0, new CellNote(), true, true);
     }
 
-    /**
-     * Creates empty editable cell containing given value.
-     *
-     * @param value Value of the cell.
-     */
+    //Tạo 1 cell mới có giá trị value, chỉnh sửa được
     public Cell(int value) {
         this(value, new CellNote(), true, true);
     }
 
+    //Đặt giá trị của 1 cell với thông tin có sẵn
     private Cell(int value, CellNote note, boolean editable, boolean valid) {
         if (value < 0 || value > 9) {
             throw new IllegalArgumentException("Value must be between 0-9.");
@@ -51,60 +48,17 @@ public class Cell {
         mValid = valid;
     }
 
-    /**
-     * Creates instance from given <code>StringTokenizer</code>.
-     *
-     * @param data
-     * @return
-     */
-    public static Cell deserialize(StringTokenizer data, int version) {
-        Cell cell = new Cell();
-        cell.setValue(Integer.parseInt(data.nextToken()));
-        cell.setNote(CellNote.deserialize(data.nextToken(), version));
-        cell.setEditable(data.nextToken().equals("1"));
-
-        return cell;
-    }
-
-    /**
-     * Creates instance from given string (string which has been
-     * created by {@link #serialize(StringBuilder)} or {@link #serialize()} method).
-     * earlier.
-     *
-     * @param cellData
-     */
-    public static Cell deserialize(String cellData) {
-        StringTokenizer data = new StringTokenizer(cellData, "|");
-        return deserialize(data, CellCollection.DATA_VERSION);
-    }
-
-    /**
-     * Gets cell's row index within {@link CellCollection}.
-     *
-     * @return Cell's row index within CellCollection.
-     */
+    //Lấy vị trí dòng của cell trong collection chứa nó
     public int getRowIndex() {
         return mRowIndex;
     }
 
-    /**
-     * Gets cell's column index within {@link CellCollection}.
-     *
-     * @return Cell's column index within CellCollection.
-     */
+    //Lấy vị trí cột của cell trong collection chứa nó
     public int getColumnIndex() {
         return mColumnIndex;
     }
 
-    /**
-     * Called when <code>Cell</code> is added to {@link CellCollection}.
-     *
-     * @param rowIndex Cell's row index within collection.
-     * @param colIndex Cell's column index within collection.
-     * @param sector   Reference to sector group in which cell is included.
-     * @param row      Reference to row group in which cell is included.
-     * @param column   Reference to column group in which cell is included.
-     */
+    //Dùng để thêm cell vào collection lưu trữ của màn chơi
     protected void initCollection(CellCollection cellCollection, int rowIndex, int colIndex,
                                   CellGroup sector, CellGroup row, CellGroup column) {
         synchronized (mCellCollectionLock) {
@@ -122,47 +76,22 @@ public class Cell {
         column.addCell(this);
     }
 
-    /**
-     * Returns sector containing this cell. Sector is 3x3 group of cells.
-     *
-     * @return Sector containing this cell.
-     */
+    //Dùng để lấy vùng chứa cell
     public CellGroup getSector() {
         return mSector;
     }
 
-    /**
-     * Returns row containing this cell.
-     *
-     * @return Row containing this cell.
-     */
+    //Dùng để lấy dòng chứa cell
     public CellGroup getRow() {
         return mRow;
     }
 
-    /**
-     * Returns column containing this cell.
-     *
-     * @return Column containing this cell.
-     */
+    //Dùng để lấy cột chứa cell
     public CellGroup getColumn() {
         return mColumn;
     }
 
-    /**
-     * Gets cell's value. Value can be 1-9 or 0 if cell is empty.
-     *
-     * @return Cell's value. Value can be 1-9 or 0 if cell is empty.
-     */
-    public int getValue() {
-        return mValue;
-    }
-
-    /**
-     * Sets cell's value. Value can be 1-9 or 0 if cell should be empty.
-     *
-     * @param value 1-9 or 0 if cell should be empty.
-     */
+    //Đặt giá trị cho cell, từ 0-9
     public void setValue(int value) {
         if (value < 0 || value > 9) {
             throw new IllegalArgumentException("Value must be between 0-9.");
@@ -171,72 +100,60 @@ public class Cell {
         onChange();
     }
 
-    /**
-     * Gets note attached to the cell.
-     *
-     * @return Note attached to the cell.
-     */
+    //Lấy giá trị từ cell, từ 0-9, cell sẽ trống khi để giá trị 0
+    public int getValue() {
+        return mValue;
+    }
+
+
+    //Lấy ghi chú/phỏng đoán của cell
     public CellNote getNote() {
         return mNote;
     }
 
-    /**
-     * Sets note attached to the cell
-     *
-     * @param note Note attached to the cell
-     */
+    //Đặt ghi chú cho 1 cell
     public void setNote(CellNote note) {
         mNote = note;
         onChange();
     }
 
-    /**
-     * Returns whether cell can be edited.
-     *
-     * @return True if cell can be edited.
-     */
+    //Trả về giá trị true hoặc false, cho biết cell có thể chỉnh sửa được hay không
     public boolean isEditable() {
         return mEditable;
     }
 
-    /**
-     * Sets whether cell can be edited.
-     *
-     * @param editable True, if cell should allow editing.
-     */
+    //Thay đổi khả năng chỉnh sửa giá trị của 1 cell
     public void setEditable(Boolean editable) {
         mEditable = editable;
         onChange();
     }
 
-    /**
-     * Returns true, if cell contains valid value according to sudoku rules.
-     *
-     * @return True, if cell contains valid value according to sudoku rules.
-     */
-    public boolean isValid() {
-        return mValid;
-    }
-
-    /**
-     * Sets whether cell contains valid value according to sudoku rules.
-     *
-     * @param valid
-     */
+    //Lưu biến chứa thông tin cho biết cell có theo đúng luật hay không
     public void setValid(Boolean valid) {
         mValid = valid;
         onChange();
     }
 
-    /**
-     * Appends string representation of this object to the given <code>StringBuilder</code>
-     * in a given data format version.
-     * You can later recreate object from this string by calling {@link #deserialize}.
-     *
-     * @see CellCollection#serialize(StringBuilder, int) for supported data format versions.
-     *
-     * @param data A <code>StringBuilder</code> where to write data.
-     */
+    //Trả về giá trị cho biết cell có theo đúng luật hay không
+    public boolean isValid() {
+        return mValid;
+    }
+
+    //Tạo các thông số đọc nhất để dùng cho phần command
+    public static Cell deserialize(StringTokenizer data, int version) {
+        Cell cell = new Cell();
+        cell.setValue(Integer.parseInt(data.nextToken()));
+        cell.setNote(CellNote.deserialize(data.nextToken(), version));
+        cell.setEditable(data.nextToken().equals("1"));
+
+        return cell;
+    }
+
+    public static Cell deserialize(String cellData) {
+        StringTokenizer data = new StringTokenizer(cellData, "|");
+        return deserialize(data, CellCollection.DATA_VERSION);
+    }
+
     public void serialize(StringBuilder data, int dataVersion) {
         if (dataVersion == CellCollection.DATA_VERSION_PLAIN) {
             data.append(mValue);
@@ -250,37 +167,23 @@ public class Cell {
             data.append(mEditable ? "1" : "0").append("|");
         }
     }
+    public void serialize(StringBuilder data) {
+        data.append(mValue).append("|");
+        if (mNote == null || mNote.isEmpty()) {
+            data.append("0").append("|");
+        } else {
+            mNote.serialize(data);
+        }
+        data.append(mEditable ? "1" : "0").append("|");
+    }
 
-    /**
-     * Returns a string representation of this object in a default data format version.
-     *
-     * @see #serialize(StringBuilder, int)
-     *
-     * @return A string representation of this object.
-     */
     public String serialize() {
         StringBuilder sb = new StringBuilder();
-        serialize(sb, CellCollection.DATA_VERSION);
+        serialize(sb);
         return sb.toString();
     }
 
-    /**
-     * Returns a string representation of this object in a given data format version.
-     *
-     * @see #serialize(StringBuilder, int)
-     *
-     * @param dataVersion A version of data format.
-     * @return A string representation of this object.
-     */
-    public String serialize(int dataVersion) {
-        StringBuilder sb = new StringBuilder();
-        serialize(sb, dataVersion);
-        return sb.toString();
-    }
-
-    /**
-     * Notify CellCollection that something has changed.
-     */
+    //Để thông báo rằng có gì đó đã thay đổi
     private void onChange() {
         synchronized (mCellCollectionLock) {
             if (mCellCollection != null) {

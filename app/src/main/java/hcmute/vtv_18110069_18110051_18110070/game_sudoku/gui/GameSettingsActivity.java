@@ -24,10 +24,6 @@ public class GameSettingsActivity extends PreferenceActivity {
         }
         return true;
     };
-    private OnPreferenceChangeListener mThemeChanged = (preference, newValue) -> {
-        enableScreenCustomTheme((String) newValue);
-        return true;
-    };
     private OnPreferenceChangeListener mHighlightSimilarCellsChanged = (preference, newValue) -> {
         mHighlightSimilarNotesPreference.setEnabled((Boolean) newValue);
         return true;
@@ -47,14 +43,6 @@ public class GameSettingsActivity extends PreferenceActivity {
             return true;
         }));
 
-        ListPreference themePreference = (ListPreference) findPreference("theme");
-        mScreenCustomTheme = (PreferenceGroup) findPreference("screen_custom_theme");
-        enableScreenCustomTheme(themePreference.getValue());
-        mScreenCustomTheme.setOnPreferenceChangeListener((preference, newValue) -> {
-            recreate();
-            return true;
-        });
-
         mHighlightSimilarNotesPreference = (CheckBoxPreference) findPreference("highlight_similar_notes");
         CheckBoxPreference highlightSimilarCellsPreference = (CheckBoxPreference) findPreference("highlight_similar_cells");
         highlightSimilarCellsPreference.setOnPreferenceChangeListener(mHighlightSimilarCellsChanged);
@@ -68,13 +56,5 @@ public class GameSettingsActivity extends PreferenceActivity {
         if (ThemeUtils.sTimestampOfLastThemeUpdate > mTimestampWhenApplyingTheme) {
             recreate();
         }
-    }
-
-    private void enableScreenCustomTheme(String themeName) {
-        boolean enable = themeName.equals("custom") || themeName.equals("custom_light");
-        mScreenCustomTheme.setEnabled(enable);
-        mScreenCustomTheme.setSummary(enable ?
-                R.string.screen_custom_theme_summary :
-                R.string.screen_custom_theme_summary_disabled);
     }
 }

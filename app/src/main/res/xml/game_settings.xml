@@ -89,7 +89,7 @@
             android:key="show_hints"
             android:summary="@string/show_hints_summary"
             android:title="@string/show_hints" />
-        <org.moire.opensudoku.gui.SudokuBoardThemePreference
+        <hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.BoardThemePreference
             android:defaultValue="opensudoku"
             android:dialogTitle="@string/select_theme"
             android:entries="@array/theme_names"
@@ -97,109 +97,10 @@
             android:key="theme"
             android:summary="@string/theme_summary"
             android:title="@string/theme" />
-        <org.moire.opensudoku.gui.SudokuBoardCustomThemePreferenceGroup
-            android:key="screen_custom_theme"
-            android:title="@string/screen_custom_theme">
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="custom_theme_isLightTheme"
-                android:summary="@string/is_light_theme_summary"
-                android:title="@string/is_light_theme_title" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/sudoku_colorPrimary"
-                android:key="custom_theme_colorPrimary"
-                android:summary="@string/app_color_primary_summary"
-                android:title="@string/app_color_primary_title" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/sudoku_colorPrimaryDark"
-                android:key="custom_theme_colorPrimaryDark"
-                android:summary="@string/app_color_secondary_summary"
-                android:title="@string/app_color_secondary_title" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/sudoku_colorAccent"
-                android:key="custom_theme_colorAccent"
-                android:summary="@string/app_color_accent_summary"
-                android:title="@string/app_color_accent_title" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/grey_500"
-                android:key="custom_theme_colorButtonNormal"
-                android:summary="@string/app_color_button_summary"
-                android:title="@string/app_color_button_title" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_lineColor"
-                android:key="custom_theme_lineColor"
-                android:summary="@string/default_lineColor_summary"
-                android:title="@string/default_lineColor" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_sectorLineColor"
-                android:key="custom_theme_sectorLineColor"
-                android:summary="@string/default_sectorLineColor_summary"
-                android:title="@string/default_sectorLineColor" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_textColor"
-                android:key="custom_theme_textColor"
-                android:summary="@string/default_textColor_summary"
-                android:title="@string/default_textColor" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_textColorReadOnly"
-                android:key="custom_theme_textColorReadOnly"
-                android:summary="@string/default_textColorReadOnly_summary"
-                android:title="@string/default_textColorReadOnly" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_textColorNote"
-                android:key="custom_theme_textColorNote"
-                android:summary="@string/default_textColorNote_summary"
-                android:title="@string/default_textColorNote" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_backgroundColor"
-                android:key="custom_theme_backgroundColor"
-                android:summary="@string/default_backgroundColor_summary"
-                android:title="@string/default_backgroundColor" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_backgroundColorSecondary"
-                android:key="custom_theme_backgroundColorSecondary"
-                android:summary="@string/default_backgroundColorSecondary_summary"
-                android:title="@string/default_backgroundColorSecondary" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_backgroundColorReadOnly"
-                android:key="custom_theme_backgroundColorReadOnly"
-                android:summary="@string/default_backgroundColorReadOnly_summary"
-                android:title="@string/default_backgroundColorReadOnly" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_backgroundColorTouched"
-                android:key="custom_theme_backgroundColorTouched"
-                android:summary="@string/default_backgroundColorTouched_summary"
-                android:title="@string/default_backgroundColorTouched" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_backgroundColorSelected"
-                android:key="custom_theme_backgroundColorSelected"
-                android:summary="@string/default_backgroundColorSelected_summary"
-                android:title="@string/default_backgroundColorSelected" />
-            <net.margaritov.preference.colorpicker.ColorPickerPreference
-                alphaSlider="true"
-                android:defaultValue="@color/default_backgroundColorHighlighted"
-                android:key="custom_theme_backgroundColorHighlighted"
-                android:summary="@string/default_backgroundColorHighlighted_summary"
-                android:title="@string/default_backgroundColorHighlighted" />
-        </org.moire.opensudoku.gui.SudokuBoardCustomThemePreferenceGroup>
         <PreferenceScreen
             android:key="screen_game_advanced"
             android:title="@string/more_settings">
-            <org.moire.opensudoku.gui.SeekBarPreference
+            <hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SeekBarPreference
                 android:defaultValue="0"
                 android:dialogTitle="@string/screen_border_size"
                 android:key="screen_border_size"

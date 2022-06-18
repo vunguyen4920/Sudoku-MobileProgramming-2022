@@ -11,29 +11,28 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.HintsQueue;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuBoardView;
 
 /**
- * Base class for several input methods used to edit sudoku contents.
  *
- * @author romario
+ * Class abstract cho các cách nhập dữ liệu
+ *
  */
 public abstract class InputMethod {
 
-    // TODO: I should not have mPrefix for fields used in subclasses, create proper getters
-    protected Context mContext;
     protected IMControlPanel mControlPanel;
     protected SudokuGame mGame;
     protected SudokuBoardView mBoard;
-    protected HintsQueue mHintsQueue;
+    protected Context mContext;
     protected View mInputMethodView;
+    protected HintsQueue mHintsQueue;
     protected boolean mActive = false;
-    private String mInputMethodName;
     private boolean mEnabled = true;
+    private String mInputMethodName;
 
     public InputMethod() {
 
     }
 
     protected void initialize(Context context, IMControlPanel controlPanel, SudokuGame game,
-                              SudokuBoardView board, HintsQueue hintsQueue) {
+            SudokuBoardView board, HintsQueue hintsQueue) {
         mContext = context;
         mControlPanel = controlPanel;
         mGame = game;
@@ -52,18 +51,12 @@ public abstract class InputMethod {
             View switchModeView = mInputMethodView.findViewById(R.id.switch_input_mode);
             Button switchModeButton = (Button) switchModeView;
             switchModeButton.setText(getAbbrName());
-            //switchModeButton.getBackground().setColorFilter(
-            //        new LightingColorFilter(Color.parseColor("#00695c"), 0));
             onControlPanelCreated(mInputMethodView);
         }
 
         return mInputMethodView;
     }
 
-    /**
-     * This should be called when activity is paused (so InputMethod can do some cleanup,
-     * for example properly dismiss dialogs because of WindowLeaked exception).
-     */
     public void pause() {
         onPause();
     }
@@ -72,11 +65,6 @@ public abstract class InputMethod {
 
     }
 
-    /**
-     * This should be unique name of input method.
-     *
-     * @return
-     */
     protected String getInputMethodName() {
         return mInputMethodName;
     }
@@ -85,11 +73,6 @@ public abstract class InputMethod {
 
     public abstract int getHelpResID();
 
-    /**
-     * Gets abbreviated name of input method, which will be displayed on input method switch button.
-     *
-     * @return
-     */
     public abstract String getAbbrName();
 
     public boolean isEnabled() {
@@ -125,20 +108,9 @@ public abstract class InputMethod {
     protected void onDeactivated() {
     }
 
-    /**
-     * Called when cell is selected. Please note that cell selection can
-     * change without direct user interaction.
-     *
-     * @param cell
-     */
     protected void onCellSelected(Cell cell) {
     }
 
-    /**
-     * Called when cell is tapped.
-     *
-     * @param cell
-     */
     protected void onCellTapped(Cell cell) {
     }
 

@@ -37,8 +37,6 @@
     <string name="clear">Clear</string>
     <string name="save">Save</string>
 
-    <string name="get_more_puzzles_online">Get more puzzles online</string>
-
     <string name="name">Name:</string>
     <string name="note">Note:</string>
 
@@ -117,9 +115,9 @@
     <string name="that_is_all">That\'s all</string>
 
     <string name="first_run_hint">
-        There are several input modes which you can use to fill in the puzzle.
-        In order to help you get familiar with these modes, there will be several hints displayed as you go through them.
-        \n\nYou can disable these hints in game settings.\n
+        Bạn có thể dùng nhiều cách nhập dữ liệu để chơi.
+        Trong khi bạn trải nghiệm trò chơi, khi thay đổi lựa chọn nhập dữ liệu, bạn sẽ nhận được các gợi ý.
+        \n\nĐừng quên là bạn cũng có thể chỉnh sửa lựa chọn này trong phần thiết lập.\n
 	</string>
 
     <string name="im_popup_hint">
@@ -358,8 +356,9 @@
     <string name="highlight_similar_notes">Highlight similar notes</string>
     <string name="highlight_similar_notes_summary">Highlight cells with similar note values</string>
 
-    <string name="resume">Resume</string>
-    <string name="sudoku_lists">Sudoku Lists</string>
+    <string name="resume_button_text">Resume</string>
+    <string name="new_game_button_text">New Game</string>
+    <string name="sudoku_list_button_text">Sudoku Lists</string>
 
     <!-- Strings added/changed in 3.1.0 -->
     <string name="undo_to_before_mistake">Undo to before mistake</string>

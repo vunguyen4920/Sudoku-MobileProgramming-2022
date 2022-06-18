@@ -10,16 +10,6 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.game.FolderInfo;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Loads details of given folders on one single background thread.
- * Results are published on GUI thread via {@link FolderDetailCallback} interface.
- * <p/>
- * Please note that instance of this class has to be created on GUI thread!
- * <p/>
- * You should explicitly call {@link #destroy()} when this object is no longer needed.
- *
- * @author romario
- */
 public class FolderDetailLoader {
 
     private static final String TAG = "FolderDetailLoader";

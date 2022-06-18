@@ -35,6 +35,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 
+/**
+ * Đây là class đa dụng được sử dụng để tạo đồng hồ bấm giờ cho người chơi
+ *
+ * Nguồn: https://github.com/SilentServices/Scrambled-Net/blob/master/Scrambled%20Net/src/com/silentservices/netscramble/Timer.java
+ */
 
 /**
  * This class implements a simple periodic timer.
@@ -74,7 +79,7 @@ abstract class Timer
      */
     private final Runnable runner = new Runnable() {
 
-        public final void run() {
+        public void run() {
             if (mIsRunning) {
                 long now = SystemClock.uptimeMillis();
 

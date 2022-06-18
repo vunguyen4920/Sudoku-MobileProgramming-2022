@@ -1,6 +1,5 @@
 package hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -20,17 +19,9 @@ import androidx.preference.Preference;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.R;
 
 /**
- * A {@link Preference} that allows for integer
- * input.
- * <p/>
- * It is a subclass of {@link DialogPreference} and shows the {@link SeekBar}
- * in a dialog.
- * <p/>
- * <code>SeekBarPreference</code> differs slightly from <code>SeekBar</code>:
- * <code>SeekBar</code> does not allow minimum other than 0. To overcome this, <code>SeekBarPreference</code>
- * adds mininum field ({@link #getMin()}, {@link #setMin(int)}) and tracks value instead of progress
- * ({@link #getValue()}, {@link #setValue(int)}).
- * <p/>
+ * Component SeekBar dùng cho việc cài đặt các lựa chọn có khoảng giá trị nhỏ
+ * gọn.
+ * 
  */
 public class SeekBarPreference extends DialogPreference {
     /**
@@ -64,15 +55,14 @@ public class SeekBarPreference extends DialogPreference {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
+                    boolean fromUser) {
                 updateValueLabel(progress);
             }
 
         };
         mSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
 
-        TypedArray a =
-                context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);
         setMin(a.getInt(R.styleable.SeekBarPreference_min, mMin));
         setMax(a.getInt(R.styleable.SeekBarPreference_max, mMax));
         setValue(a.getInt(R.styleable.SeekBarPreference_value, mValue));
@@ -142,7 +132,8 @@ public class SeekBarPreference extends DialogPreference {
 
         if (value > mMax) {
             mValue = mMax;
-        } else mValue = Math.max(value, mMin);
+        } else
+            mValue = Math.max(value, mMin);
 
         persistInt(value);
 
@@ -169,7 +160,6 @@ public class SeekBarPreference extends DialogPreference {
         SeekBar seekBar = mSeekBar;
         seekBar.setProgress(getValue() - mMin);
         updateValueLabel(seekBar.getProgress());
-
 
         ViewParent oldParent = seekBar.getParent();
         if (oldParent != view) {
@@ -258,16 +248,15 @@ public class SeekBarPreference extends DialogPreference {
     }
 
     private static class SavedState extends BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR =
-                new Parcelable.Creator<SavedState>() {
-                    public SavedState createFromParcel(Parcel in) {
-                        return new SavedState(in);
-                    }
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
 
-                    public SavedState[] newArray(int size) {
-                        return new SavedState[size];
-                    }
-                };
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
         int value;
 
         public SavedState(Parcel source) {

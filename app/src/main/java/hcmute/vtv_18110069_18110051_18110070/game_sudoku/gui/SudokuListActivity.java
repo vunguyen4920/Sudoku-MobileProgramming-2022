@@ -37,9 +37,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * List of puzzles in folder.
+ * Show danh mục độ khó các màn chơi sudoku.
  *
- * @author romario
  */
 public class SudokuListActivity extends ThemedActivity {
 
@@ -75,7 +74,6 @@ public class SudokuListActivity extends ThemedActivity {
 
     private long mFolderID;
 
-    // input parameters for dialogs
     private long mDeletePuzzleID;
     private long mResetPuzzleID;
     private long mEditNotePuzzleID;
@@ -123,11 +121,11 @@ public class SudokuListActivity extends ThemedActivity {
         mListSorter.setAscending(settings.getBoolean(SORT_ORDER, false));
 
         mAdapter = new SimpleCursorAdapter(this, R.layout.sudoku_list_item,
-                null, new String[]{SudokuColumns.DATA, SudokuColumns.STATE,
-                SudokuColumns.TIME, SudokuColumns.LAST_PLAYED,
-                SudokuColumns.CREATED, SudokuColumns.PUZZLE_NOTE},
-                new int[]{R.id.sudoku_board, R.id.state, R.id.time,
-                        R.id.last_played, R.id.created, R.id.note});
+                null, new String[] { SudokuColumns.DATA, SudokuColumns.STATE,
+                        SudokuColumns.TIME, SudokuColumns.LAST_PLAYED,
+                        SudokuColumns.CREATED, SudokuColumns.PUZZLE_NOTE },
+                new int[] { R.id.sudoku_board, R.id.state, R.id.time,
+                        R.id.last_played, R.id.created, R.id.note });
         mAdapter.setViewBinder(new SudokuListViewBinder(this));
         updateList();
 
@@ -166,18 +164,14 @@ public class SudokuListActivity extends ThemedActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // the puzzle list is naturally refreshed when the window
-        // regains focus, so we only need to update the title
         updateTitle();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // if there is no activity in history and back button was pressed, go
-        // to FolderListActivity, which is the root activity.
         if (isTaskRoot() && keyCode == KeyEvent.KEYCODE_BACK) {
             Intent i = new Intent();
-            i.setClass(this, FolderListActivity.class);
+            i.setClass(this, DifficultiesListActivity.class);
             startActivity(i);
             finish();
             return true;
@@ -190,8 +184,6 @@ public class SudokuListActivity extends ThemedActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        // This is our one standard application action -- inserting a
-        // new note into the list.
         menu.add(0, MENU_ITEM_FOLDERS, 0, R.string.folders).setShortcut('1', 'f')
                 .setIcon(R.drawable.ic_folder);
         menu.add(0, MENU_ITEM_INSERT, 1, R.string.add_sudoku).setShortcut('1', 'a')
@@ -200,18 +192,10 @@ public class SudokuListActivity extends ThemedActivity {
                 .setIcon(R.drawable.ic_view);
         menu.add(0, MENU_ITEM_SORT, 2, R.string.sort).setShortcut('2', 'o')
                 .setIcon(R.drawable.ic_sort);
-        menu.add(0, MENU_ITEM_RESET_ALL, 3, R.string.reset_all_puzzles).setShortcut('3','r')
+        menu.add(0, MENU_ITEM_RESET_ALL, 3, R.string.reset_all_puzzles).setShortcut('3', 'r')
                 .setIcon(R.drawable.ic_undo);
         menu.add(0, MENU_ITEM_SETTINGS, 4, R.string.settings).setShortcut('4', 's')
                 .setIcon(R.drawable.ic_settings);
-        // I'm not sure this one is ready for release
-//		menu.add(0, MENU_ITEM_GENERATE, 3, R.string.generate_sudoku).setShortcut('4', 'g')
-//		.setIcon(R.drawable.ic_add);
-
-        // Generate any additional actions that can be performed on the
-        // overall list. In a normal install, there are no additional
-        // actions found here, but this allows other applications to extend
-        // our menu with their own actions.
         Intent intent = new Intent(null, getIntent().getData());
         intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
         menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
@@ -277,7 +261,7 @@ public class SudokuListActivity extends ThemedActivity {
                         .setTitle(R.string.filter_by_gamestate)
                         .setMultiChoiceItems(
                                 R.array.game_states,
-                                new boolean[]{
+                                new boolean[] {
                                         mListFilter.showStateNotStarted,
                                         mListFilter.showStatePlaying,
                                         mListFilter.showStateCompleted,
@@ -340,13 +324,14 @@ public class SudokuListActivity extends ThemedActivity {
                         .setTitle(R.string.reset_all_puzzles_confirm)
                         .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                             List<SudokuGame> sudokuGames = mDatabase.getAllSudokuByFolder(mFolderID, mListSorter);
-                            for (SudokuGame sudokuGame: sudokuGames) {
+                            for (SudokuGame sudokuGame : sudokuGames) {
                                 sudokuGame.reset();
                                 mDatabase.updateSudoku(sudokuGame);
                             }
                             updateList();
                         })
-                        .setNegativeButton(android.R.string.no, (dialog, whichButton) -> { })
+                        .setNegativeButton(android.R.string.no, (dialog, whichButton) -> {
+                        })
                         .create();
         }
         return null;
@@ -375,13 +360,11 @@ public class SudokuListActivity extends ThemedActivity {
 
         Cursor cursor = (Cursor) mListView.getAdapter().getItem(info.position);
         if (cursor == null) {
-            // For some reason the requested item isn't available, do nothing
             return;
         }
 
         menu.setHeaderTitle("Puzzle");
 
-        // Add a menu item to delete the note
         menu.add(0, MENU_ITEM_PLAY, 0, R.string.play_puzzle);
         menu.add(0, MENU_ITEM_EDIT_NOTE, 1, R.string.edit_note);
         menu.add(0, MENU_ITEM_RESET, 2, R.string.reset_puzzle);
@@ -430,7 +413,6 @@ public class SudokuListActivity extends ThemedActivity {
         Intent i;
         switch (item.getItemId()) {
             case MENU_ITEM_INSERT: {
-                // Launch activity to insert a new item
                 i = new Intent(this, SudokuEditActivity.class);
                 i.setAction(Intent.ACTION_INSERT);
                 i.putExtra(SudokuEditActivity.EXTRA_FOLDER_ID, mFolderID);
@@ -448,7 +430,7 @@ public class SudokuListActivity extends ThemedActivity {
                 showDialog(DIALOG_SORT);
                 return true;
             case MENU_ITEM_FOLDERS: {
-                i = new Intent(this, FolderListActivity.class);
+                i = new Intent(this, DifficultiesListActivity.class);
                 startActivity(i);
                 finish();
                 return true;
@@ -460,9 +442,6 @@ public class SudokuListActivity extends ThemedActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Updates whole list.
-     */
     private void updateList() {
         updateTitle();
         updateFilterStatus();
@@ -496,14 +475,14 @@ public class SudokuListActivity extends ThemedActivity {
     }
 
     private void playSudoku(long sudokuID) {
-        Intent i = new Intent(SudokuListActivity.this, SudokuPlayActivity.class);
-        i.putExtra(SudokuPlayActivity.EXTRA_SUDOKU_ID, sudokuID);
+        Intent i = new Intent(SudokuListActivity.this, PlayActivity.class);
+        i.putExtra(PlayActivity.EXTRA_SUDOKU_ID, sudokuID);
         startActivity(i);
     }
 
     private static class SudokuListViewBinder implements ViewBinder {
         private Context mContext;
-        private GameTimeFormat mGameTimeFormatter = new GameTimeFormat();
+        private TimerFormat mTimerFormatter = new TimerFormat();
         private DateFormat mDateTimeFormatter = DateFormat.getDateTimeInstance(
                 DateFormat.SHORT, DateFormat.SHORT);
         private DateFormat mTimeFormatter = DateFormat
@@ -523,7 +502,6 @@ public class SudokuListActivity extends ThemedActivity {
             switch (view.getId()) {
                 case R.id.sudoku_board:
                     String data = c.getString(columnIndex);
-                    // TODO: still can be faster, I don't have to call initCollection and read notes
                     CellCollection cells = null;
                     try {
                         cells = CellCollection.deserialize(data);
@@ -555,9 +533,11 @@ public class SudokuListActivity extends ThemedActivity {
                             : View.VISIBLE);
                     label.setText(stateString);
                     if (state == SudokuGame.GAME_STATE_COMPLETED) {
-                        label.setTextColor(ThemeUtils.getCurrentThemeColor(view.getContext(), android.R.attr.colorAccent));
+                        label.setTextColor(
+                                ThemeUtils.getCurrentThemeColor(view.getContext(), android.R.attr.colorAccent));
                     } else {
-                        label.setTextColor(ThemeUtils.getCurrentThemeColor(view.getContext(), android.R.attr.textColorPrimary));
+                        label.setTextColor(
+                                ThemeUtils.getCurrentThemeColor(view.getContext(), android.R.attr.textColorPrimary));
                     }
                     break;
                 case R.id.time:
@@ -565,15 +545,17 @@ public class SudokuListActivity extends ThemedActivity {
                     label = ((TextView) view);
                     String timeString = null;
                     if (time != 0) {
-                        timeString = mGameTimeFormatter.format(time);
+                        timeString = mTimerFormatter.format(time);
                     }
                     label.setVisibility(timeString == null ? View.GONE
                             : View.VISIBLE);
                     label.setText(timeString);
                     if (state == SudokuGame.GAME_STATE_COMPLETED) {
-                        label.setTextColor(ThemeUtils.getCurrentThemeColor(view.getContext(), android.R.attr.colorAccent));
+                        label.setTextColor(
+                                ThemeUtils.getCurrentThemeColor(view.getContext(), android.R.attr.colorAccent));
                     } else {
-                        label.setTextColor(ThemeUtils.getCurrentThemeColor(view.getContext(), android.R.attr.textColorPrimary));
+                        label.setTextColor(
+                                ThemeUtils.getCurrentThemeColor(view.getContext(), android.R.attr.textColorPrimary));
                     }
                     break;
                 case R.id.last_played:
@@ -596,7 +578,6 @@ public class SudokuListActivity extends ThemedActivity {
                         createdString = mContext.getString(R.string.created_at,
                                 getDateAndTimeForHumans(created));
                     }
-                    // TODO: when GONE, note is not correctly aligned below last_played
                     label.setVisibility(createdString == null ? View.GONE
                             : View.VISIBLE);
                     label.setText(createdString);

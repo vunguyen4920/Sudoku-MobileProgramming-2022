@@ -23,7 +23,7 @@ import java.util.Collection;
  *
  * @author romario
  */
-public class SudokuBoardView extends View {
+public class   SudokuBoardView extends View {
 
     public static final int DEFAULT_BOARD_SIZE = 100;
 

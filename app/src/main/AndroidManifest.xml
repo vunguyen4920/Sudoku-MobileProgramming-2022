@@ -95,5 +95,6 @@
             android:label="@string/game_settings"
             android:screenOrientation="portrait" />
     </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>

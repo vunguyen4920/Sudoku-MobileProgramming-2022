@@ -4,13 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-/**
- * Represents group of cells which must each contain unique number.
- * <p/>
- * Typical examples of instances are sudoku row, column or sector (3x3 group of cells).
- *
- * @author romario
- */
+ //Tượng trưng cho mỗi nhóm của sudoku, trong nhóm thì các giá trị là duy nhất
+ //để xác định cho cột, dòng hay theo vùng
 public class CellGroup {
     private Cell[] mCells = new Cell[CellCollection.SUDOKU_SIZE];
     private int mPos = 0;
@@ -21,15 +16,9 @@ public class CellGroup {
     }
 
 
-    /**
-     * Validates numbers in given sudoku group - numbers must be unique. Cells with invalid
-     * numbers are marked (see {@link Cell#isValid}).
-     * <p/>
-     * Method expects that cell's invalid properties has been set to false
-     * ({@link CellCollection#validate} does this).
-     *
-     * @return True if validation is successful.
-     */
+     //Dùng để kiểm tra các giá trị trong group có duy nhất không,
+     //nếu có thì sẽ chuyển giá trị đó là không phạm quy
+     //Hàm được sử dụng sau khi xét tất cả cell là phạm quy ở collection
     protected boolean validate() {
         boolean valid = true;
 
@@ -42,14 +31,13 @@ public class CellGroup {
                 valid = false;
             } else {
                 cellsByValue.put(value, cell);
-                // we cannot set cell as valid here, because same cell can be invalid
-                // as part of another group
             }
         }
 
         return valid;
     }
 
+    //Kiểm tra xem trong nhóm có giá trị nào đó chưa
     public boolean DoesntContain(int value) {
         for (Cell mCell : mCells) {
             if (mCell.getValue() == value) {

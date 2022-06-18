@@ -24,7 +24,7 @@ import java.util.Collection;
  * - Cũng như là hiển thị sáng hơn cho dòng và cột tương ứng với ô trên
  *
  */
-public class SudokuBoardView extends View {
+public class   SudokuBoardView extends View {
 
     public static final int DEFAULT_BOARD_SIZE = 100;
 

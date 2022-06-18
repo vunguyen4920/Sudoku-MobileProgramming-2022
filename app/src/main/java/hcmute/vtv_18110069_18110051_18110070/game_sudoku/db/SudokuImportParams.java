@@ -11,6 +11,7 @@ public class SudokuImportParams {
     public String note;
     public String command_stack;
 
+    // function dùng để clear param của màn chơi
     public void clear() {
         created = 0;
         state = SudokuGame.GAME_STATE_NOT_STARTED;

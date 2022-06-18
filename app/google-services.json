@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "584323091351",
+    "project_id": "mobile-sudoku",
+    "storage_bucket": "mobile-sudoku.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584323091351:android:87ead613b30c9eddb652d2",
+        "android_client_info": {
+          "package_name": "hcmute.vtv_18110069_18110051_18110070.game_sudoku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584323091351-o2a7np0o4qv9ghqi3rha7ppthkqbthsq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFleN-r1ZU0oVxRKB8BEAvvPLPc-Pu8m4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584323091351-o2a7np0o4qv9ghqi3rha7ppthkqbthsq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

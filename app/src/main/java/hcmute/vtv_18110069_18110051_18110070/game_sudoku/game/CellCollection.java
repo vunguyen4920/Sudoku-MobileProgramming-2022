@@ -38,6 +38,7 @@ public class CellCollection {
 
         mCells = cells;
         initCollection();
+    }
     //Tạo collection mới để chứa các cell
     public static CellCollection createEmpty() {
         Cell[][] cells = new Cell[SUDOKU_SIZE][SUDOKU_SIZE];
@@ -103,13 +104,6 @@ public class CellCollection {
             return fromString(data);
         }
     }
-
-    }
-
-    
-    }
-
-    
      //Tạo instance cho collection với thông tin đưa vào, chỉ thêm được giá trị cho cell
     public static CellCollection fromString(String data) {
 
@@ -171,6 +165,7 @@ public class CellCollection {
         //Lấy các cell được lưu trữ tạm
     public Cell[][] getCells() {
         return mCells;
+    }
     //Lấy vị trí của cell trong collection
     public Cell getCell(int rowIndex, int colIndex) {
         return mCells[rowIndex][colIndex];
@@ -232,7 +227,7 @@ public class CellCollection {
         return valid;
     }
 
-    //Kiểm tra xem collection đã hoàn thành chưa, mọi cell đều có giá trị 
+    //Kiểm tra xem collection đã hoàn thành chưa, mọi cell đều có giá trị
     //và không cell nào phạm quy
     public boolean isCompleted() {
         for (int r = 0; r < SUDOKU_SIZE; r++) {
@@ -358,25 +353,20 @@ public void fillInNotesWithAllValues() {
             }
         }
     }
-
-   
-
-
-
     //Dùng để tạo các chuỗi đọc nhất
     public String serialize() {
         StringBuilder sb = new StringBuilder();
         serialize(sb, DATA_VERSION);
         return sb.toString();
     }
-     
+
      public String serialize(int dataVersion) {
         StringBuilder sb = new StringBuilder();
-        serialize(sb, dataVersion);   
+        serialize(sb, dataVersion);
         return sb.toString();
     }
 
-    public void serialize(StringBuilder data) {    
+    public void serialize(StringBuilder data) {
         serialize(data, DATA_VERSION);
     }
         public void serialize(StringBuilder data, int dataVersion) {

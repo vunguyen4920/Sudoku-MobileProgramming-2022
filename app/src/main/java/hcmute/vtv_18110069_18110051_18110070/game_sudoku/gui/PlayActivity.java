@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +31,7 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.inputmethod.IMPopup
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.inputmethod.IMSingleNumber;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.utils.ThemeUtils;
 
-public class SudokuPlayActivity extends ThemedActivity {
+public class PlayActivity extends ThemedActivity {
 
     public static final String EXTRA_SUDOKU_ID = "sudoku_id";
 
@@ -74,6 +75,7 @@ public class SudokuPlayActivity extends ThemedActivity {
     private TextView mTimeLabel;
     private Menu mOptionsMenu;
 
+    // Khai báo các kiểu chơi
     private IMControlPanel mIMControlPanel;
     private IMControlPanelStatePersister mIMControlPanelStatePersister;
     private IMPopup mIMPopup;
@@ -82,16 +84,12 @@ public class SudokuPlayActivity extends ThemedActivity {
 
     private boolean mShowTime = true;
     private GameTimer mGameTimer;
-    private GameTimeFormat mGameTimeFormatter = new GameTimeFormat();
+    private TimerFormat mTimerFormatter = new TimerFormat();
     private boolean mFullScreen;
     private boolean mFillInNotesEnabled = false;
 
     private HintsQueue mHintsQueue;
-    /**
-     * Occurs when puzzle is solved.
-     */
     private OnPuzzleSolvedListener onSolvedListener = new OnPuzzleSolvedListener() {
-
         @Override
         public void onPuzzleSolved() {
             if (mShowTime) {
@@ -154,6 +152,7 @@ public class SudokuPlayActivity extends ThemedActivity {
         // create sudoku game instance
         if (savedInstanceState == null) {
             // activity runs for the first time, read game from database
+            Log.d("WTF", String.valueOf(getIntent().getLongExtra(EXTRA_SUDOKU_ID, 0)));
             long mSudokuGameID = getIntent().getLongExtra(EXTRA_SUDOKU_ID, 0);
             mSudokuGame = mDatabase.getSudoku(mSudokuGameID);
         } else {
@@ -163,7 +162,7 @@ public class SudokuPlayActivity extends ThemedActivity {
             mGameTimer.restoreState(savedInstanceState);
         }
 
-        // save our most recently played sudoku
+        // Lưu màn chơi gần nhất vào SharedPrefs
         SharedPreferences gameSettings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = gameSettings.edit();
         editor.putLong("most_recently_played_sudoku_id", mSudokuGame.getId());
@@ -204,7 +203,6 @@ public class SudokuPlayActivity extends ThemedActivity {
     protected void onResume() {
         super.onResume();
 
-        // read game settings
         SharedPreferences gameSettings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         int screenPadding = gameSettings.getInt("screen_border_size", 0);
@@ -271,8 +269,6 @@ public class SudokuPlayActivity extends ThemedActivity {
         super.onWindowFocusChanged(hasFocus);
 
         if (hasFocus) {
-            // FIXME: When activity is resumed, title isn't sometimes hidden properly (there is black
-            // empty space at the top of the screen). This is desperate workaround.
             if (mFullScreen) {
                 mGuiHandler.postDelayed(() -> {
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -283,11 +279,14 @@ public class SudokuPlayActivity extends ThemedActivity {
         }
     }
 
+    /**
+     * Khi dừng trò chơi thì lưu vào db
+     *
+     */
     @Override
     protected void onPause() {
         super.onPause();
 
-        // we will save game to the database as we might not be able to get back
         mDatabase.updateSudoku(mSudokuGame);
 
         mGameTimer.stop();
@@ -373,7 +372,7 @@ public class SudokuPlayActivity extends ThemedActivity {
         Intent intent = new Intent(null, getIntent().getData());
         intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
         menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
-                new ComponentName(this, SudokuPlayActivity.class), null, intent, 0, null);
+                new ComponentName(this, PlayActivity.class), null, intent, 0, null);
 
         mOptionsMenu = menu;
         return true;
@@ -468,9 +467,6 @@ public class SudokuPlayActivity extends ThemedActivity {
         }
     }
 
-    /**
-     * Restarts whole activity.
-     */
     private void restartActivity() {
         startActivity(getIntent());
         finish();
@@ -483,7 +479,7 @@ public class SudokuPlayActivity extends ThemedActivity {
                 return new AlertDialog.Builder(this)
                         .setIcon(R.drawable.ic_info)
                         .setTitle(R.string.well_done)
-                        .setMessage(getString(R.string.congrats, mGameTimeFormatter.format(mSudokuGame.getTime())))
+                        .setMessage(getString(R.string.congrats, mTimerFormatter.format(mSudokuGame.getTime())))
                         .setPositiveButton(android.R.string.ok, null)
                         .create();
             case DIALOG_RESTART:
@@ -598,13 +594,10 @@ public class SudokuPlayActivity extends ThemedActivity {
             mSudokuBoard.moveCellSelectionTo(cell.getRowIndex(), cell.getColumnIndex());
     }
 
-    /**
-     * Update the time of game-play.
-     */
     void updateTime() {
         if (mShowTime) {
-            setTitle(mGameTimeFormatter.format(mSudokuGame.getTime()));
-            mTimeLabel.setText(mGameTimeFormatter.format(mSudokuGame.getTime()));
+            setTitle(mTimerFormatter.format(mSudokuGame.getTime()));
+            mTimeLabel.setText(mTimerFormatter.format(mSudokuGame.getTime()));
         } else {
             setTitle(R.string.app_name);
         }
@@ -615,8 +608,6 @@ public class SudokuPlayActivity extends ThemedActivity {
         void onSelectedNumberChanged(int number);
     }
 
-    // This class implements the game clock.  All it does is update the
-    // status each tick.
     private final class GameTimer extends Timer {
 
         GameTimer() {

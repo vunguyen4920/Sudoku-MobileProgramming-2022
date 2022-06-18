@@ -2,106 +2,133 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="bottom"
         android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/switch_num_note"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter" />
 
         <Button
             android:id="@+id/button_1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="1" />
 
         <Button
             android:id="@+id/button_2"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="2" />
 
         <Button
             android:id="@+id/button_3"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="3" />
 
         <Button
             android:id="@+id/button_4"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="4" />
 
         <Button
             android:id="@+id/button_5"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="5" />
-
-        <ImageButton
-            android:id="@+id/switch_num_note"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:scaleType="fitCenter" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="top"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_6"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="6" />
 
         <Button
             android:id="@+id/button_7"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="7" />
 
         <Button
             android:id="@+id/button_8"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="8" />
 
         <Button
             android:id="@+id/button_9"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="9" />
 
         <Button
             android:id="@+id/button_clear"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded"
             android:text="C" />
 
         <Button
             android:id="@+id/switch_input_mode"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/primary_button"
+            android:minHeight="100dp"
             android:text="POP" />
 
     </LinearLayout>

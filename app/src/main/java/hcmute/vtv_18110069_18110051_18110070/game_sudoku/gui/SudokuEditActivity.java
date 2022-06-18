@@ -64,33 +64,17 @@ public class SudokuEditActivity extends ThemedActivity {
     private SudokuDatabase mDatabase;
     private SudokuGame mGame;
     private ViewGroup mRootLayout;
-    private Handler mGuiHandler;
     private ClipboardManager mClipboard;
-
-    private boolean mFullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // go fullscreen for devices with QVGA screen (only way I found
-        // how to fit UI on the screen)
-        Display display = getWindowManager().getDefaultDisplay();
-        if ((display.getWidth() == 240 || display.getWidth() == 320)
-                && (display.getHeight() == 240 || display.getHeight() == 320)) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            mFullScreen = true;
-        }
 
         setContentView(R.layout.sudoku_edit);
         mRootLayout = findViewById(R.id.root_layout);
         SudokuBoardView mBoard = findViewById(R.id.sudoku_board);
 
         mDatabase = new SudokuDatabase(getApplicationContext());
-
-        mGuiHandler = new Handler();
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -146,24 +130,6 @@ public class SudokuEditActivity extends ThemedActivity {
 
         mClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
     }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        if (hasFocus) {
-            // FIXME: When activity is resumed, title isn't sometimes hidden properly (there is black
-            // empty space at the top of the screen). This is desperate workaround.
-            if (mFullScreen) {
-                mGuiHandler.postDelayed(() -> {
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                    mRootLayout.requestLayout();
-                }, 1000);
-            }
-
-        }
-    }
-
 
     @Override
     protected void onPause() {
@@ -243,7 +209,10 @@ public class SudokuEditActivity extends ThemedActivity {
                 pasteFromClipboard();
                 return true;
             case MENU_ITEM_CHECK_SOLVABILITY:
-                boolean solvable = checkSolvability();
+                mGame.getCells().markFilledCellsAsNotEditable();
+                boolean solvable = mGame.isSolvable();
+                mGame.getCells().markAllCellsAsEditable();
+
                 if (solvable) {
                     showDialog(DIALOG_PUZZLE_SOLVABLE);
                 } else {
@@ -279,13 +248,6 @@ public class SudokuEditActivity extends ThemedActivity {
                         .create();
         }
         return null;
-    }
-
-    private boolean checkSolvability() {
-        mGame.getCells().markFilledCellsAsNotEditable();
-        boolean solvable = mGame.isSolvable();
-        mGame.getCells().markAllCellsAsEditable();
-        return solvable;
     }
 
     private void savePuzzle() {

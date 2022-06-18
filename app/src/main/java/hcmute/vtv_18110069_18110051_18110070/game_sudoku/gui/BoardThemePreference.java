@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,20 +13,22 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.R;
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.utils.ThemeUtils;
 
 /**
- * A {@link Preference} that allows for setting and previewing a Sudoku Board theme.
+ *
+ * Component dùng cho việc group các thiết lập giao diện người dùng
+ *
  */
-public class SudokuBoardThemePreference extends ListPreference {
+public class BoardThemePreference extends ListPreference {
     /**
      * The edit text shown in the dialog.
      */
     private SudokuBoardView mBoard;
     private int mClickedDialogEntryIndex;
 
-    public SudokuBoardThemePreference(Context context, AttributeSet attrs) {
+    public BoardThemePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SudokuBoardThemePreference(Context context) {
+    public BoardThemePreference(Context context) {
         this(context, null);
     }
 
@@ -41,7 +42,7 @@ public class SudokuBoardThemePreference extends ListPreference {
         builder.setSingleChoiceItems(getEntries(), mClickedDialogEntryIndex,
                 (dialog, which) -> {
                     mClickedDialogEntryIndex = which;
-                    SudokuBoardThemePreference.this.applyThemePreview(
+                    BoardThemePreference.this.applyThemePreview(
                             getEntryValues()[mClickedDialogEntryIndex].toString());
                 });
 

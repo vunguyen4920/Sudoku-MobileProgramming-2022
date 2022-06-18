@@ -4,11 +4,17 @@ import android.content.Context;
 
 import hcmute.vtv_18110069_18110051_18110070.game_sudoku.db.SudokuColumns;
 
+/**
+ * Tương tự như class Filter
+ * Cũng dùng cho việc lọc theo tiêu chí:
+ * - Thời gian chơi
+ * - Chơi gần nhất
+ */
 public class SudokuListSorter {
 
     public static final int SORT_BY_CREATED = 0;
-    public static final int SORT_BY_TIME = 1;
-    public static final int SORT_BY_LAST_PLAYED = 2;
+    public static final int SORT_BY_TIME = 0;
+    public static final int SORT_BY_LAST_PLAYED = 1;
 
     private static final int SORT_TYPE_OPTIONS_LENGTH = 3;
 
@@ -47,8 +53,6 @@ public class SudokuListSorter {
     public String getSortOrder() {
         String order = ascending ? " ASC" : " DESC";
         switch (sortType) {
-            case SORT_BY_CREATED:
-                return SudokuColumns.CREATED + order;
             case SORT_BY_TIME:
                 return SudokuColumns.TIME + order;
             case SORT_BY_LAST_PLAYED:

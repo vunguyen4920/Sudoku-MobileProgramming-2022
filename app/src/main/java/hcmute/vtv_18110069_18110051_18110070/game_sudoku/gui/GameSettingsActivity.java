@@ -24,10 +24,6 @@ public class GameSettingsActivity extends PreferenceActivity {
         }
         return true;
     };
-    private OnPreferenceChangeListener mThemeChanged = (preference, newValue) -> {
-        enableScreenCustomTheme((String) newValue);
-        return true;
-    };
     private OnPreferenceChangeListener mHighlightSimilarCellsChanged = (preference, newValue) -> {
         mHighlightSimilarNotesPreference.setEnabled((Boolean) newValue);
         return true;

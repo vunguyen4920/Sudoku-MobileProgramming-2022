@@ -8,6 +8,12 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class hoạt động như 1 class đa dụng dùng để
+ * chứa xử lý cho việc lọc màn chơi theo
+ * tiêu chí đã chơi, đang chơi, hay chưa chơi
+ *
+ */
 public class SudokuListFilter {
 
     public boolean showStateNotStarted = true;

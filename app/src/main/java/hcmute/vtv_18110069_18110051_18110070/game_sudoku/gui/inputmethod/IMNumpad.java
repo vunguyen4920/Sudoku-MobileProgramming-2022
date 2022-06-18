@@ -20,6 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * Người dùng chọn ô và chọn số sẽ được cập nhật ngay lập tức
+ */
 public class IMNumpad extends InputMethod {
 
     private static final int MODE_EDIT_VALUE = 0;

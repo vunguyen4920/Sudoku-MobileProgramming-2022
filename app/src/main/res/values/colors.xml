@@ -6,9 +6,10 @@
     <color name="coffee_colorAccent">@color/brown_600</color>
 
     <color name="sudoku_colorPrimaryLight">#D1FDF9</color>
-    <color name="sudoku_colorPrimary">#49B7AC</color>
+    <color name="sudoku_colorPrimary">#C37D92</color>
     <color name="sudoku_colorPrimaryDark">#009587</color>
-    <color name="sudoku_colorAccent">#656565</color>
+    <color name="sudoku_colorAccent">#D3939B</color>
+    <color name="sudoku_colorAccent2">#846267</color>
 
     <color name="default_lineColor">#757575</color>
     <color name="default_sectorLineColor">#9e9e9e</color>

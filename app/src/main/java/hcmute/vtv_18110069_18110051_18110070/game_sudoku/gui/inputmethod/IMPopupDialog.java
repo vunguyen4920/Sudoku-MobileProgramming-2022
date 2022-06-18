@@ -22,27 +22,38 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Đây là component popup phục vụ cho việc input dữ liệu
+ *
+ * Người dùng sẽ chạm vào ô và lựa chọn số họ muốn trên popup.
+ *
+ */
 public class IMPopupDialog extends Dialog {
 
     private Context mContext;
     private LayoutInflater mInflater;
     private TabHost mTabHost;
 
-    // buttons from "Select number" tab
     private Map<Integer, Button> mNumberButtons = new HashMap<>();
-    // buttons from "Edit note" tab
     private Map<Integer, ToggleButton> mNoteNumberButtons = new HashMap<>();
 
-    // selected number on "Select number" tab (0 if nothing is selected).
     private int mSelectedNumber;
-    // selected numbers on "Edit note" tab
     private Set<Integer> mNoteSelectedNumbers = new HashSet<>();
 
     private OnNumberEditListener mOnNumberEditListener;
     private OnNoteEditListener mOnNoteEditListener;
-    /**
-     * Occurs when user selects number in "Select number" tab.
-     */
+
+    private OnCheckedChangeListener editNoteCheckedChangeListener = (buttonView, isChecked) -> {
+        Integer number = (Integer) buttonView.getTag();
+        if (isChecked) {
+            mNoteSelectedNumbers.add(number);
+        } else {
+            mNoteSelectedNumbers.remove(number);
+        }
+        ThemeUtils.applyIMButtonStateToView(buttonView,
+                isChecked ? ThemeUtils.IMButtonStyle.ACCENT : ThemeUtils.IMButtonStyle.DEFAULT);
+    };
+
     private View.OnClickListener editNumberButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -55,21 +66,18 @@ public class IMPopupDialog extends Dialog {
             dismiss();
         }
     };
-    /**
-     * Occurs when user checks or unchecks number in "Edit note" tab.
-     */
-    private OnCheckedChangeListener editNoteCheckedChangeListener = (buttonView, isChecked) -> {
-        Integer number = (Integer) buttonView.getTag();
-        if (isChecked) {
-            mNoteSelectedNumbers.add(number);
-        } else {
-            mNoteSelectedNumbers.remove(number);
+
+    private View.OnClickListener closeButtonListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            if (mOnNoteEditListener != null) {
+                Integer[] numbers = new Integer[mNoteSelectedNumbers.size()];
+                mOnNoteEditListener.onNoteEdit(mNoteSelectedNumbers.toArray(numbers));
+            }
+            dismiss();
         }
-        ThemeUtils.applyIMButtonStateToView(buttonView, isChecked ? ThemeUtils.IMButtonStyle.ACCENT : ThemeUtils.IMButtonStyle.DEFAULT);
     };
-    /**
-     * Occurs when user presses "Clear" button.
-     */
     private View.OnClickListener clearButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -88,20 +96,6 @@ public class IMPopupDialog extends Dialog {
             }
         }
     };
-    /**
-     * Occurs when user presses "Close" button.
-     */
-    private View.OnClickListener closeButtonListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            if (mOnNoteEditListener != null) {
-                Integer[] numbers = new Integer[mNoteSelectedNumbers.size()];
-                mOnNoteEditListener.onNoteEdit(mNoteSelectedNumbers.toArray(numbers));
-            }
-            dismiss();
-        }
-    };
 
     public IMPopupDialog(Context context) {
         super(context);
@@ -113,20 +107,10 @@ public class IMPopupDialog extends Dialog {
         setContentView(mTabHost);
     }
 
-    /**
-     * Registers a callback to be invoked when number is selected.
-     *
-     * @param l
-     */
     public void setOnNumberEditListener(OnNumberEditListener l) {
         mOnNumberEditListener = l;
     }
 
-    /**
-     * Register a callback to be invoked when note is edited.
-     *
-     * @param l
-     */
     public void setOnNoteEditListener(OnNoteEditListener l) {
         mOnNoteEditListener = l;
     }
@@ -142,7 +126,6 @@ public class IMPopupDialog extends Dialog {
         }
     }
 
-    // TODO: vsude jinde pouzivam misto number value
     public void updateNumber(Integer number) {
         mSelectedNumber = number;
         for (Map.Entry<Integer, Button> entry : mNumberButtons.entrySet()) {
@@ -155,11 +138,6 @@ public class IMPopupDialog extends Dialog {
         }
     }
 
-    /**
-     * Updates selected numbers in note.
-     *
-     * @param numbers
-     */
     public void updateNote(Collection<Integer> numbers) {
         mNoteSelectedNumbers = new HashSet<>();
 
@@ -181,7 +159,6 @@ public class IMPopupDialog extends Dialog {
 
         Button b = mNumberButtons.get(number);
         if (number == mSelectedNumber) {
-            // Set color of completed and selected number
             ThemeUtils.applyIMButtonStateToView(b, ThemeUtils.IMButtonStyle.ACCENT);
         } else {
             ThemeUtils.applyIMButtonStateToView(b, ThemeUtils.IMButtonStyle.ACCENT_HIGHCONTRAST);
@@ -192,20 +169,12 @@ public class IMPopupDialog extends Dialog {
         mNumberButtons.get(number).setText(number + " (" + count + ")");
     }
 
-    /**
-     * Creates view with two tabs, first for number in cell selection, second for
-     * note editing.
-     *
-     * @return
-     */
     private TabHost createTabView() {
         TabHost tabHost = new TabHost(mContext, null);
         tabHost.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-        //tabHost.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
         LinearLayout linearLayout = new LinearLayout(mContext);
         linearLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-        //linearLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         TabWidget tabWidget = new TabWidget(mContext);
@@ -234,11 +203,6 @@ public class IMPopupDialog extends Dialog {
         return tabHost;
     }
 
-    /**
-     * Creates view for number in cell editing.
-     *
-     * @return
-     */
     private View createEditNumberView() {
         View v = mInflater.inflate(R.layout.im_popup_edit_value, null);
 
@@ -266,11 +230,6 @@ public class IMPopupDialog extends Dialog {
         return v;
     }
 
-    /**
-     * Creates view for note editing.
-     *
-     * @return
-     */
     private View createEditNoteView() {
         View v = mInflater.inflate(R.layout.im_popup_edit_note, null);
 
@@ -298,22 +257,10 @@ public class IMPopupDialog extends Dialog {
         return v;
     }
 
-    /**
-     * Interface definition for a callback to be invoked, when user selects number, which
-     * should be entered in the sudoku cell.
-     *
-     * @author romario
-     */
     public interface OnNumberEditListener {
         boolean onNumberEdit(int number);
     }
 
-    /**
-     * Interface definition for a callback to be invoked, when user selects new note
-     * content.
-     *
-     * @author romario
-     */
     public interface OnNoteEditListener {
         boolean onNoteEdit(Integer[] number);
     }

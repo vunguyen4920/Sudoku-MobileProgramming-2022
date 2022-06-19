@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 
+/**
+ * đây là class đa dụng dùng để làm việc với chuỗi
+ */
 public class StringUtils {
     public static String join(Collection<?> s, String delimiter) {
         StringBuilder builder = new StringBuilder();

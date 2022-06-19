@@ -29,16 +29,8 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.inputmethod.InputMe
 import static android.content.ClipDescription.MIMETYPE_TEXT_HTML;
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 
-/**
- * Activity for editing content of puzzle.
- *
- * @author romario
- */
 public class SudokuEditActivity extends ThemedActivity {
 
-    /**
-     * When inserting new data, I need to know folder in which will new sudoku be stored.
-     */
     public static final String EXTRA_FOLDER_ID = "folder_id";
     public static final String EXTRA_SUDOKU_ID = "sudoku_id";
 
@@ -51,7 +43,6 @@ public class SudokuEditActivity extends ThemedActivity {
     private static final int DIALOG_PUZZLE_SOLVABLE = 1;
     private static final int DIALOG_PUZZLE_NOT_SOLVABLE = 2;
 
-    // The different distinct states the activity can be run in.
     private static final int STATE_EDIT = 0;
     private static final int STATE_INSERT = 1;
     private static final int STATE_CANCEL = 2;
@@ -80,7 +71,7 @@ public class SudokuEditActivity extends ThemedActivity {
         String action = intent.getAction();
         long mSudokuID;
         if (Intent.ACTION_EDIT.equals(action)) {
-            // Requested to edit: set that state, and the data being edited.
+//            Nếu nhận intent là edit, lưu lại trannjg thái và dữ liệu đang được chỉnh sửa
             mState = STATE_EDIT;
             if (intent.hasExtra(EXTRA_SUDOKU_ID)) {
                 mSudokuID = intent.getLongExtra(EXTRA_SUDOKU_ID, 0);
@@ -98,7 +89,6 @@ public class SudokuEditActivity extends ThemedActivity {
             }
 
         } else {
-            // Whoops, unknown action!  Bail.
             Log.e(TAG, "Unknown action, exiting.");
             finish();
             return;
@@ -109,7 +99,6 @@ public class SudokuEditActivity extends ThemedActivity {
             mGame.restoreState(savedInstanceState);
         } else {
             if (mSudokuID != 0) {
-                // existing sudoku, read it from database
                 mGame = mDatabase.getSudoku(mSudokuID);
                 mGame.getCells().markAllCellsAsEditable();
             } else {
@@ -121,7 +110,6 @@ public class SudokuEditActivity extends ThemedActivity {
         IMControlPanel mInputMethods = findViewById(R.id.input_methods);
         mInputMethods.initialize(mBoard, mGame, null);
 
-        // only numpad input method will be enabled
         for (InputMethod im : mInputMethods.getInputMethods()) {
             im.setEnabled(false);
         }
@@ -155,8 +143,6 @@ public class SudokuEditActivity extends ThemedActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // This is our one standard application action -- inserting a
-        // new note into the list.
         menu.add(0, MENU_ITEM_COPY,  0, android.R.string.copy);
         menu.add(0, MENU_ITEM_PASTE, 1, android.R.string.paste);
         menu.add(0, MENU_ITEM_CHECK_SOLVABILITY, 2, R.string.check_solvabitily);
@@ -167,10 +153,6 @@ public class SudokuEditActivity extends ThemedActivity {
                 .setShortcut('3', 'c')
                 .setIcon(R.drawable.ic_close);
 
-        // Generate any additional actions that can be performed on the
-        // overall list.  In a normal install, there are no additional
-        // actions found here, but this allows other applications to extend
-        // our menu with their own actions.
         Intent intent = new Intent(null, getIntent().getData());
         intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
         menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
@@ -184,15 +166,12 @@ public class SudokuEditActivity extends ThemedActivity {
         super.onPrepareOptionsMenu(menu);
 
         if (!(mClipboard.hasPrimaryClip())) {
-            // If the clipboard doesn't contain data, disable the paste menu item.
             menu.findItem(MENU_ITEM_PASTE).setEnabled(false);
         } else if (!(mClipboard.getPrimaryClipDescription().hasMimeType(MIMETYPE_TEXT_PLAIN) ||
                 mClipboard.getPrimaryClipDescription().hasMimeType(MIMETYPE_TEXT_HTML))) {
-            // This disables the paste menu item, since the clipboard has data but it is not plain text
             Toast.makeText(getApplicationContext(), mClipboard.getPrimaryClipDescription().getMimeType(0),Toast.LENGTH_SHORT).show();
             menu.findItem(MENU_ITEM_PASTE).setEnabled(false);
         } else {
-            // This enables the paste menu item, since the clipboard contains plain text.
             menu.findItem(MENU_ITEM_PASTE).setEnabled(true);
         }
 
@@ -220,7 +199,6 @@ public class SudokuEditActivity extends ThemedActivity {
                 }
                 return true;
             case MENU_ITEM_SAVE:
-                // do nothing, puzzle will be saved automatically in onPause
                 finish();
                 return true;
             case MENU_ITEM_CANCEL:
@@ -266,11 +244,6 @@ public class SudokuEditActivity extends ThemedActivity {
         }
     }
 
-    /**
-     * Copies puzzle to primary clipboard in a plain text format (81 character string).
-     *
-     * @see CellCollection#serialize(StringBuilder, int) for supported data format versions.
-     */
     private void copyToClipboard() {
         CellCollection cells = mGame.getCells();
         String serializedCells = cells.serialize(CellCollection.DATA_VERSION_PLAIN);
@@ -279,11 +252,6 @@ public class SudokuEditActivity extends ThemedActivity {
         Toast.makeText(getApplicationContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Pastes puzzle from primary clipboard in any of the supported formats.
-     *
-     * @see CellCollection#serialize(StringBuilder, int) for supported data format versions.
-     */
     private void pasteFromClipboard() {
         if (mClipboard.hasPrimaryClip()) {
             if (mClipboard.getPrimaryClipDescription().hasMimeType(MIMETYPE_TEXT_PLAIN) ||

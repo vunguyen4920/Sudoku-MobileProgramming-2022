@@ -70,6 +70,7 @@ public class PlayActivity extends ThemedActivity {
 
     private Handler mGuiHandler;
 
+//    Khai báo các component
     private ViewGroup mRootLayout;
     private SudokuBoardView mSudokuBoard;
     private TextView mTimeLabel;
@@ -210,7 +211,7 @@ public class PlayActivity extends ThemedActivity {
 
         mFillInNotesEnabled = gameSettings.getBoolean("fill_in_notes_enabled", false);
 
-        String theme = gameSettings.getString("theme", "opensudoku");
+        String theme = gameSettings.getString("theme", "vtvsudoku");
         if (theme.equals("custom") || theme.equals("custom_light")) {
             ThemeUtils.applyCustomThemeToSudokuBoardViewFromContext(mSudokuBoard, getApplicationContext());
         }

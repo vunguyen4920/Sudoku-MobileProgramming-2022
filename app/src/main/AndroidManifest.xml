@@ -21,6 +21,9 @@
         <activity
             android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuListActivity"
             android:label="@string/app_name" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <activity
             android:name="hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuEditActivity"
             android:label="@string/edit_sudoku">

@@ -251,7 +251,6 @@ public class IMSingleNumber extends InputMethod {
                 } else if (selNumber > 0 && selNumber <= 9) {
                     CellNote newNote = cell.getNote().toggleNumber(selNumber);
                     mGame.setCellNote(cell, newNote);
-                    // if we toggled the note off we want to de-select the cell
                     if (!newNote.hasNumber(selNumber)) {
                         mBoard.clearCellSelection();
                     }
@@ -260,15 +259,14 @@ public class IMSingleNumber extends InputMethod {
             case MODE_EDIT_VALUE:
                 if (selNumber >= 0 && selNumber <= 9) {
                     if (!mNumberButtons.get(selNumber).isEnabled()) {
-                        // Number requested has been disabled but it is still selected. This means that
-                        // this number can be no longer entered, however any of the existing fields
-                        // with this number can be deleted by repeated touch
+                        /**
+                         * Con số được sử dụng bị vô hiệu thì con số vẫn sẽ được lựa chọn.
+                         */
                         if (selNumber == cell.getValue()) {
                             mGame.setCellValue(cell, 0);
                             mBoard.clearCellSelection();
                         }
                     } else {
-                        // Normal flow, just set the value (or clear it if it is repeated touch)
                         if (selNumber == cell.getValue()) {
                             selNumber = 0;
                             mBoard.clearCellSelection();

@@ -12,7 +12,6 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.utils.ThemeUtils;
 
 public class GameSettingsActivity extends PreferenceActivity {
 
-    private PreferenceGroup mScreenCustomTheme;
     private long mTimestampWhenApplyingTheme;
     private CheckBoxPreference mHighlightSimilarNotesPreference;
     private OnPreferenceChangeListener mShowHintsChanged = (preference, newValue) -> {

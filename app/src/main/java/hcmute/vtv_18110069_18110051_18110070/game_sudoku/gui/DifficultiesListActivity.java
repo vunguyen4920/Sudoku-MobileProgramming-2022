@@ -25,6 +25,7 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.db.SudokuDatabase;
  *
  */
 public class DifficultiesListActivity extends ThemedActivity {
+//    Setup hằng số để tiện cho việc gọi cũng như sụ dễ dàng xuyên suốt quá trình code
     public static final int MENU_ITEM_SETTINGS = Menu.FIRST;
     private Cursor mCursor;
     private SudokuDatabase mDatabase;

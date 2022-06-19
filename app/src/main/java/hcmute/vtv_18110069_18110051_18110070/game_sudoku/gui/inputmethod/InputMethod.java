@@ -17,8 +17,11 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.SudokuBoardView;
  */
 public abstract class InputMethod {
 
+//    Layout Control Panel
     protected IMControlPanel mControlPanel;
+//    Class sudoku game đang chơi
     protected SudokuGame mGame;
+//    Component board view đang hoạt động
     protected SudokuBoardView mBoard;
     protected Context mContext;
     protected View mInputMethodView;

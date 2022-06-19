@@ -32,7 +32,6 @@ public class FolderDetailLoader {
 
                 mGuiHandler.post(() -> loadedCallbackFinal.onLoaded(folderInfo));
             } catch (Exception e) {
-                // this is some unimportant background stuff, do not fail
                 Log.e(TAG, "Error occurred while loading full folder info.", e);
             }
         });

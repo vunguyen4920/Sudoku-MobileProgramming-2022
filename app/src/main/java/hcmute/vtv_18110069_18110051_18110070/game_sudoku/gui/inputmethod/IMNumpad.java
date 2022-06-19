@@ -86,8 +86,8 @@ public class IMNumpad extends InputMethod {
     }
 
     /**
-     * If set to true, buttons for numbers, which occur in {@link CellCollection}
-     * more than {@link CellCollection#SUDOKU_SIZE}-times, will be highlighted.
+     *
+     * Nếu như tham số truyền vào là true, các nút số sẽ được làm nổi lên
      *
      * @param highlightCompletedValues
      */

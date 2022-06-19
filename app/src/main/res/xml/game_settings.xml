@@ -90,7 +90,7 @@
             android:summary="@string/show_hints_summary"
             android:title="@string/show_hints" />
         <hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui.BoardThemePreference
-            android:defaultValue="opensudoku"
+            android:defaultValue="vtvsudoku"
             android:dialogTitle="@string/select_theme"
             android:entries="@array/theme_names"
             android:entryValues="@array/theme_codes"

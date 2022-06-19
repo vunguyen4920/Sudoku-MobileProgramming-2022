@@ -39,7 +39,7 @@
     </string-array>
     <!-- Theme codes should not change -->
     <string-array name="theme_codes" translatable="false">
-        <item>opensudoku</item>
+        <item>vtvsudoku</item>
         <item>amoled</item>
         <item>latte</item>
         <item>espresso</item>

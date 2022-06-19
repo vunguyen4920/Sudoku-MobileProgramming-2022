@@ -7,9 +7,7 @@ import android.content.SharedPreferences.Editor;
 import androidx.preference.PreferenceManager;
 
 /**
- *
  * Class này giúp cho việc lưu state người dùng chọn cách nhập dữ liệu nào
- *
  */
 public class IMControlPanelStatePersister {
 
@@ -22,12 +20,12 @@ public class IMControlPanelStatePersister {
     }
 
     public void saveState(IMControlPanel controlPanel) {
-        // save state of control panel itself
+//       Lưu state của control panel này
         StateBundle cpState = new StateBundle(mPreferences, PREFIX + "", true);
         cpState.putInt("activeMethodIndex", controlPanel.getActiveMethodIndex());
         cpState.commit();
 
-        // save state of all input methods
+        // Chạy vòng lặp để lưu state cho các input method
         for (InputMethod im : controlPanel.getInputMethods()) {
             StateBundle outState = new StateBundle(mPreferences, PREFIX + "" + im.getInputMethodName(), true);
             im.onSaveState(outState);
@@ -36,27 +34,21 @@ public class IMControlPanelStatePersister {
     }
 
     public void restoreState(IMControlPanel controlPanel) {
-        // restore state of control panel itself
+        // Tương tự như khi save thì ta restore lại state cũng như thé
+//        Restore state của Control panel
         StateBundle cpState = new StateBundle(mPreferences, PREFIX + "", false);
         int methodId = cpState.getInt("activeMethodIndex", 0);
         if (methodId != -1) {
             controlPanel.activateInputMethod(methodId);
         }
 
-        // restore state of all input methods
+//       restore state của các input method
         for (InputMethod im : controlPanel.getInputMethods()) {
             StateBundle savedState = new StateBundle(mPreferences, PREFIX + "" + im.getInputMethodName(), false);
             im.onRestoreState(savedState);
         }
     }
 
-    /**
-     * This is basically wrapper around anything which is capable of storing
-     * state. Instance of this object will be passed to concrete input method's
-     * to store and retreive their state.
-     *
-     * @author romario
-     */
     public static class StateBundle {
 
         private final SharedPreferences mPreferences;

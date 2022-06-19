@@ -18,9 +18,6 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.utils.ThemeUtils;
  *
  */
 public class BoardThemePreference extends ListPreference {
-    /**
-     * The edit text shown in the dialog.
-     */
     private SudokuBoardView mBoard;
     private int mClickedDialogEntryIndex;
 

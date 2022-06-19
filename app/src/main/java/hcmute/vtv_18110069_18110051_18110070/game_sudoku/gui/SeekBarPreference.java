@@ -21,12 +21,9 @@ import hcmute.vtv_18110069_18110051_18110070.game_sudoku.R;
 /**
  * Component SeekBar dùng cho việc cài đặt các lựa chọn có khoảng giá trị nhỏ
  * gọn.
- * 
+ *
  */
 public class SeekBarPreference extends DialogPreference {
-    /**
-     * The edit text shown in the dialog.
-     */
     private SeekBar mSeekBar;
     private TextView mValueLabel;
 
@@ -41,7 +38,7 @@ public class SeekBarPreference extends DialogPreference {
         setDialogLayoutResource(R.layout.preference_dialog_seek_bar);
 
         mSeekBar = new SeekBar(context, attrs);
-        // Give it an ID so it can be saved/restored
+//        Trả cho seek bar 1 id tiện cho việc lưu dữ liệu và lấy lại dữ liệu
         mSeekBar.setId(R.id.seek_bar);
         OnSeekBarChangeListener mOnSeekBarChangeListener = new OnSeekBarChangeListener() {
 

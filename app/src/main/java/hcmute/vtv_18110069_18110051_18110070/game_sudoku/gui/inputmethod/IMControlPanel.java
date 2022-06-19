@@ -36,11 +36,23 @@ public class IMControlPanel extends LinearLayout {
 
     private List<InputMethod> mInputMethods = new ArrayList<>();
     private int mActiveMethodIndex = -1;
+
+    /**
+     * Event khi chạm vào cell
+     *
+     * chạy hàm onCellTapped của input method tương ứng
+     */
     private OnCellTappedListener mOnCellTapListener = cell -> {
         if (mActiveMethodIndex != -1 && mInputMethods != null) {
             mInputMethods.get(mActiveMethodIndex).onCellTapped(cell);
         }
     };
+
+    /**
+     * Event khi chạm vào cell
+     *
+     * chạy hàm onCellSelected của input method tương ứng
+     */
     private OnCellSelectedListener mOnCellSelected = cell -> {
         if (mActiveMethodIndex != -1 && mInputMethods != null) {
             mInputMethods.get(mActiveMethodIndex).onCellSelected(cell);
@@ -76,6 +88,11 @@ public class IMControlPanel extends LinearLayout {
         }
     }
 
+    /**
+     * Hàm kích hoạt input method truyền vào tham số là id của 3 method trên
+     *
+     * @param methodID
+     */
     public void activateInputMethod(int methodID) {
         if (methodID < -1 || methodID >= mInputMethods.size()) {
             throw new IllegalArgumentException(String.format("Invalid method id: %s.", methodID));

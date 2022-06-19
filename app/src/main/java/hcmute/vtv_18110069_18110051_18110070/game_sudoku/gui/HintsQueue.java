@@ -93,17 +93,11 @@ public class HintsQueue {
         Message hint = new Message();
         hint.titleResID = titleResID;
         hint.messageResID = messageResID;
-        //hint.args = args;
         addHint(hint);
     }
 
     public void showOneTimeHint(String key, int titleResID, int messageResID, Object... args) {
         if (mOneTimeHintsEnabled) {
-
-            // FIXME: remove in future versions
-            // Before 1.0.0, hintKey was created from messageResID. This ID has in 1.0.0 changed.
-            // From 1.0.0, hintKey is based on key, to be backward compatible, check for old
-            // hint keys.
             if (legacyHintsWereDisplayed()) {
                 return;
             }
@@ -133,20 +127,9 @@ public class HintsQueue {
         editor.apply();
     }
 
-    /**
-     * This should be called when activity is paused.
-     */
-    public void pause() {
-        // get rid of WindowLeakedException in logcat
-        if (mHintDialog != null) {
-            mHintDialog.cancel();
-        }
-    }
-
     private static class Message {
         int titleResID;
         int messageResID;
-        //Object[] args;
     }
 
 }

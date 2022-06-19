@@ -261,11 +261,6 @@ public class   SudokuBoardView extends View {
         mHighlightedValue = value;
     }
 
-    /**
-     * Registers callback which will be invoked when user taps the cell.
-     *
-     * @param l
-     */
     public void setOnCellTappedListener(OnCellTappedListener l) {
         mOnCellTappedListener = l;
     }
@@ -276,12 +271,6 @@ public class   SudokuBoardView extends View {
         }
     }
 
-    /**
-     * Registers callback which will be invoked when cell is selected. Cell selection
-     * can change without user interaction.
-     *
-     * @param l
-     */
     public void setOnCellSelectedListener(OnCellSelectedListener l) {
         mOnCellSelectedListener = l;
     }
@@ -307,12 +296,6 @@ public class   SudokuBoardView extends View {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-
-//        Log.d(TAG, "widthMode=" + getMeasureSpecModeString(widthMode));
-//        Log.d(TAG, "widthSize=" + widthSize);
-//        Log.d(TAG, "heightMode=" + getMeasureSpecModeString(heightMode));
-//        Log.d(TAG, "heightSize=" + heightSize);
 
         int width, height;
         if (widthMode == MeasureSpec.EXACTLY) {
@@ -356,11 +339,9 @@ public class   SudokuBoardView extends View {
         mCellValuePaint.setTextSize(cellTextSize);
         mCellValueReadonlyPaint.setTextSize(cellTextSize);
         mCellValueInvalidPaint.setTextSize(cellTextSize);
-        // compute offsets in each cell to center the rendered number
         mNumberLeft = (int) ((mCellWidth - mCellValuePaint.measureText("9")) / 2);
         mNumberTop = (int) ((mCellHeight - mCellValuePaint.getTextSize()) / 2);
 
-        // add some offset because in some resolutions notes are cut-off in the top
         mNoteTop = mCellHeight / 50.0f;
         mCellNotePaint.setTextSize((mCellHeight - mNoteTop * 2) / 3.0f);
 
@@ -385,17 +366,12 @@ public class   SudokuBoardView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // some notes:
-        // Drawable has its own draw() method that takes your Canvas as an argument
-
-        // TODO: I don't get this, why do I need to substract padding only from one side?
         int width = getWidth() - getPaddingRight();
         int height = getHeight() - getPaddingBottom();
 
         int paddingLeft = getPaddingLeft();
         int paddingTop = getPaddingTop();
 
-        // draw secondary background
         if (mBackgroundColorSecondary.getColor() != NO_COLOR) {
             canvas.drawRect(3 * mCellWidth, 0, 6 * mCellWidth, 3 * mCellWidth, mBackgroundColorSecondary);
             canvas.drawRect(0, 3 * mCellWidth, 3 * mCellWidth, 6 * mCellWidth, mBackgroundColorSecondary);
@@ -403,7 +379,7 @@ public class   SudokuBoardView extends View {
             canvas.drawRect(3 * mCellWidth, 6 * mCellWidth, 6 * mCellWidth, 9 * mCellWidth, mBackgroundColorSecondary);
         }
 
-        // draw cells
+        // Vẽ ô
         int cellLeft, cellTop;
         if (mCells != null) {
 
@@ -420,7 +396,6 @@ public class   SudokuBoardView extends View {
                     cellLeft = Math.round((col * mCellWidth) + paddingLeft);
                     cellTop = Math.round((row * mCellHeight) + paddingTop);
 
-                    // draw read-only field background
                     if (!cell.isEditable() && hasBackgroundColorReadOnly &&
                             (mSelectedCell == null || mSelectedCell != cell)) {
                         if (mBackgroundColorReadOnly.getColor() != NO_COLOR) {
@@ -431,7 +406,7 @@ public class   SudokuBoardView extends View {
                         }
                     }
 
-                    // highlight similar cells
+                    // Làm nổi các ô có cùng giá trị
                     boolean cellIsNotAlreadySelected = (mSelectedCell == null || mSelectedCell != cell);
                     boolean highlightedValueIsValid = mHighlightedValue != 0;
                     boolean shouldHighlightCell = false;
@@ -472,7 +447,7 @@ public class   SudokuBoardView extends View {
                 }
             }
 
-            // highlight selected cell
+            // Làm nổi ổ được chọn
             if (!mReadonly && mSelectedCell != null) {
                 cellLeft = Math.round(mSelectedCell.getColumnIndex() * mCellWidth) + paddingLeft;
                 cellTop = Math.round(mSelectedCell.getRowIndex() * mCellHeight) + paddingTop;
@@ -482,8 +457,7 @@ public class   SudokuBoardView extends View {
                         mBackgroundColorSelected);
             }
 
-            // visually highlight cell under the finger (to cope with touch screen
-            // imprecision)
+//            Làm nổi ô được chọn bởi người dùng
             if (mHighlightTouchedCell && mTouchedCell != null) {
                 cellLeft = Math.round(mTouchedCell.getColumnIndex() * mCellWidth) + paddingLeft;
                 cellTop = Math.round(mTouchedCell.getRowIndex() * mCellHeight) + paddingTop;
@@ -532,13 +506,13 @@ public class   SudokuBoardView extends View {
             }
         }
 
-        // draw vertical lines
+        // Vex đường kẻ dọc
         for (int c = 0; c <= 9; c++) {
             float x = (c * mCellWidth) + paddingLeft;
             canvas.drawLine(x, paddingTop, x, height, mLinePaint);
         }
 
-        // draw horizontal lines
+        // Vex đường kẻ ngang
         for (int r = 0; r <= 9; r++) {
             float y = r * mCellHeight + paddingTop;
             canvas.drawLine(paddingLeft, y, width, y, mLinePaint);
@@ -547,7 +521,7 @@ public class   SudokuBoardView extends View {
         int sectorLineWidth1 = mSectorLineWidth / 2;
         int sectorLineWidth2 = sectorLineWidth1 + (mSectorLineWidth % 2);
 
-        // draw sector (thick) lines
+        // Vẽ các đường giao nhau ở tâm màn hình
         for (int c = 0; c <= 9; c = c + 3) {
             float x = (c * mCellWidth) + paddingLeft;
             canvas.drawRect(x - sectorLineWidth1, paddingTop, x + sectorLineWidth2, height, mSectorLinePaint);
@@ -648,10 +622,6 @@ public class   SudokuBoardView extends View {
         return false;
     }
 
-    /**
-     * Moves selected cell by one cell to the right. If edge is reached, selection
-     * skips on beginning of another line.
-     */
     public void moveCellSelectionRight() {
         if (!moveCellSelection(1, 0)) {
             int selRow = mSelectedCell.getRowIndex();
@@ -683,13 +653,6 @@ public class   SudokuBoardView extends View {
         }
     }
 
-    /**
-     * Moves selected by vx cells right and vy cells down. vx and vy can be negative. Returns true,
-     * if new cell is selected.
-     *
-     * @param vx Horizontal offset, by which move selected cell.
-     * @param vy Vertical offset, by which move selected cell.
-     */
     private boolean moveCellSelection(int vx, int vy) {
         int newRow = 0;
         int newCol = 0;
@@ -703,11 +666,8 @@ public class   SudokuBoardView extends View {
     }
 
     /**
-     * Moves selection to the cell given by row and column index.
+     * Đưa lựa chọn đến cell chỉ định với param là dòng và cột
      *
-     * @param row Row index of cell which should be selected.
-     * @param col Columnd index of cell which should be selected.
-     * @return True, if cell was successfuly selected.
      */
     public boolean moveCellSelectionTo(int row, int col) {
         if (col >= 0 && col < CellCollection.SUDOKU_SIZE
@@ -729,14 +689,10 @@ public class   SudokuBoardView extends View {
     }
 
     /**
-     * Returns cell at given screen coordinates. Returns null if no cell is found.
+     * Lấy tọa độ của các ô
      *
-     * @param x
-     * @param y
-     * @return
      */
     private Cell getCellAtPoint(int x, int y) {
-        // take into account padding
         int lx = x - getPaddingLeft();
         int ly = y - getPaddingTop();
 
@@ -757,42 +713,11 @@ public class   SudokuBoardView extends View {
         NUMBERS_AND_NOTES
     }
 
-    /**
-     * Occurs when user tap the cell.
-     *
-     * @author romario
-     */
     public interface OnCellTappedListener {
         void onCellTapped(Cell cell);
     }
 
-    /**
-     * Occurs when user selects the cell.
-     *
-     * @author romario
-     */
     public interface OnCellSelectedListener {
         void onCellSelected(Cell cell);
     }
-
-//	private String getMeasureSpecModeString(int mode) {
-//		String modeString = null;
-//		switch (mode) {
-//		case MeasureSpec.AT_MOST:
-//			modeString = "MeasureSpec.AT_MOST";
-//			break;
-//		case MeasureSpec.EXACTLY:
-//			modeString = "MeasureSpec.EXACTLY";
-//			break;
-//		case MeasureSpec.UNSPECIFIED:
-//			modeString = "MeasureSpec.UNSPECIFIED";
-//			break;
-//		}
-//
-//		if (modeString == null)
-//			modeString = new Integer(mode).toString();
-//
-//		return modeString;
-//	}
-
 }

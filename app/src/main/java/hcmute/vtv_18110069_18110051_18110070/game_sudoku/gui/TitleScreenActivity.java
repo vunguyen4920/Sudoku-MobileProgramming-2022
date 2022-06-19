@@ -1,5 +1,6 @@
 package hcmute.vtv_18110069_18110051_18110070.game_sudoku.gui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
@@ -92,12 +95,12 @@ public class TitleScreenActivity extends ThemedActivity {
         // google-services.json file
         GoogleSignInOptions googleSignInOptions=new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN
-        ).requestIdToken("923872413327-qcekb497smokmhnthcii7ot37mhpdf1k.apps.googleusercontent.com")
+        ).requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
         // Initialize sign in client
-        googleSignInClient= GoogleSignIn.getClient(TitleScreenActivity.this
+        googleSignInClient= GoogleSignIn.getClient(this
                 ,googleSignInOptions);
         // Initialize firebase auth
         firebaseAuth= FirebaseAuth.getInstance();
@@ -113,6 +116,35 @@ public class TitleScreenActivity extends ThemedActivity {
         }
     }
 
+    private final ActivityResultLauncher<Intent> loginWithGoogleIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            // There are no request codes
+            Intent data = result.getData();
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                if (account != null) {
+                    if (account.getIdToken()==null){
+
+                      // TODO hien thong bao loi
+                    } else {
+                        firebaseAuthWithGoogle(account.getIdToken(),account.getEmail());
+                    }
+                }
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                // TODO hien thong bao loi
+            }
+        } else {
+            // TODO do nothing
+        }
+    });
+
+    private void firebaseAuthWithGoogle(String idToken,String email) {
+        Toast.makeText(this,idToken+email+"bucu",Toast.LENGTH_LONG);
+    }
     private boolean canResume(long mSudokuGameID) {
         SudokuDatabase mDatabase = new SudokuDatabase(getApplicationContext());
         SudokuGame mSudokuGame = mDatabase.getSudoku(mSudokuGameID);
@@ -136,7 +168,10 @@ public class TitleScreenActivity extends ThemedActivity {
             mResumeBtn.setVisibility(View.GONE);
         }
     }
-
+    private void doLoginWithGoogle(){
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        loginWithGoogleIntent.launch(signInIntent);
+    }
     private void setupGoogleSignInButton() {
         firebaseAuth=FirebaseAuth.getInstance();
         FirebaseUser firebaseUser=firebaseAuth.getCurrentUser();
@@ -148,10 +183,7 @@ public class TitleScreenActivity extends ThemedActivity {
             mGoogleSignInBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Initialize sign in intent
-                    Intent intent=googleSignInClient.getSignInIntent();
-                    // Start activity for result
-                    startActivityForResult(intent,RC_SIGN_IN);
+                    doLoginWithGoogle();
                 }
             });
         } else {

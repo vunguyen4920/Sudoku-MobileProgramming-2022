@@ -5,11 +5,8 @@
 
     <string name="puzzle_folders">Sudoku puzzle folders</string>
 
-<<<<<<< HEAD
     <string name="version">Version %s</string>
 
-=======
->>>>>>> 377edc7b3568ba28cc3af103e88711adfb5efe27
     <string name="close">Close</string>
     <string name="clear">Clear</string>
     <string name="save">Save</string>
@@ -20,7 +17,6 @@
     <string name="select_number">Select number</string>
     <string name="edit_note">Edit note</string>
 
-<<<<<<< HEAD
     <string name="add_folder">Add folder</string>
     <string name="about">About</string>
     <string name="rename_folder">Rename folder</string>
@@ -29,8 +25,6 @@
     <string name="delete_folder_title">Delete %s</string>
     <string name="delete_folder_confirm">Are you sure you want to delete this folder?</string>
 
-=======
->>>>>>> 377edc7b3568ba28cc3af103e88711adfb5efe27
     <string name="no_puzzles">No puzzles</string>
     <string name="one_puzzle">1 puzzle</string>
     <string name="n_puzzles">%d puzzles</string>

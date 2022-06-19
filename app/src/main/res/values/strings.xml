@@ -6,32 +6,6 @@
     <string name="puzzle_folders">Sudoku puzzle folders</string>
 
     <string name="version">Version %s</string>
-    <string name="homepage" translatable="false">https://opensudoku.moire.org/</string>
-    <string name="email" translatable="false">&lt;opensudoku@moire.org&gt;</string>
-    <string name="send_me_bugs">
-        If you run into a bug, don\'t hesitate to contact me by e-mail
-		or use the issue tracker on the project\'s homepage.
-	</string>
-
-    <string name="current_developers_label">Current Developer</string>
-    <string name="current_developers" translatable="false">Óscar García Amor</string>
-
-    <string name="old_developers_label">Old Developers</string>
-    <string name="old_developers" translatable="false">Roman Mašek</string>
-
-    <string name="localization_contributors_label">Localization Contributors</string>
-    <string name="localization_contributors" translatable="false">
-        Vit Hnilica\n
-        Martin Sobola\n
-        Martin Helff\n
-        Diego Pierotto\n
-        Gokay Can Kayki\n
-        Paulo Schopf\n
-        Joaquim Pedroto Costa\n
-        @madcrow\n
-        @Tubix\n
-        @ceskyDJ
-    </string>
 
     <string name="close">Close</string>
     <string name="clear">Clear</string>
@@ -44,8 +18,6 @@
     <string name="edit_note">Edit note</string>
 
     <string name="add_folder">Add folder</string>
-    <string name="import_file">Import</string>
-    <string name="import_file_title">Import file %s</string>
     <string name="about">About</string>
     <string name="rename_folder">Rename folder</string>
     <string name="delete_folder">Delete folder</string>
